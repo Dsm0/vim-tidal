@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 set -euf -o pipefail
 
 # Get current directory (of script)
@@ -20,8 +20,10 @@ function setdir {
 
 setdir
 
-TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../Tidal.ghci"}
-GHCI=${GHCI:-"ghci"}
+echo "TESTING"
+
+# SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../Tidal.ghci"}
+# SCLANG=${SCLANG:-"/bin/sclang"}
 
 # Run GHCI and load Tidal bootstrap file
-$GHCI -ghci-script $TIDAL_BOOT_PATH "$@"
+# $SCLANG -ghci-script $SUPERDIRT_BOOT_PATH "$@

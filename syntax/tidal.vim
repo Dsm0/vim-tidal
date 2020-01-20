@@ -13,7 +13,6 @@ if version < 600
 elseif exists("b:current_syntax")
   finish
 endif
-
 if get(g:, 'haskell_backpack', 0)
   syn keyword haskellBackpackStructure unit signature
   syn keyword haskellBackpackDependency dependency

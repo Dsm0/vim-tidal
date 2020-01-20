@@ -312,7 +312,7 @@ if !exists("g:tidal_paste_file")
 endif
 
 if !exists("g:tidal_default_config")
-  let g:tidal_default_config = { "socket_name": "default", "target_pane": ":0.1" }
+  let g:tidal_default_config = { "socket_name": "default", "target_pane": "tidal:0.2" , "sclang_pane": "tidal:0.0"}
 endif
 
 if !exists("g:tidal_preserve_curpos")
