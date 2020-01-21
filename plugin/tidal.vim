@@ -19,6 +19,22 @@ function! s:TmuxSend(config, text)
   call system(l:prefix . " paste-buffer -d -t " . shellescape(a:config["target_pane"]))
 endfunction
 
+
+
+function! s:TmuxSendSclang(config, text)
+  let l:prefix = "tmux -L " . shellescape(a:config["socket_name"])
+  " use STDIN unless configured to use a file
+  if !exists("g:tidal_paste_file")
+    call system(l:prefix . " load-buffer -", a:text)
+  else
+    call s:WritePasteFile(a:text)
+    call system(l:prefix . " load-buffer " . g:tidal_paste_file)
+  end
+  call system(l:prefix . " paste-buffer -d -t " . shellescape(a:config["sclang_pane"]))
+endfunction
+
+
+
 function! s:TmuxPaneNames(A,L,P)
   let format = '#{pane_id} #{session_name}:#{window_index}.#{pane_index} #{window_name}#{?window_active, (active),}'
   return system("tmux -L " . shellescape(b:tidal_config['socket_name']) . " list-panes -a -F " . shellescape(format))
@@ -296,6 +312,8 @@ noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>Tid
 
 noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
 noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
+" noremap <unique> <script> <silent> <Plug>SclangLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
+" noremap <unique> <script> <silent> <Plug>TidalHush:<c-h>call <SID>TidalHush<cr>
 noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator
 noremap <unique> <script> <silent> <Plug>TidalParagraphSend <SID>Operatorip
 noremap <unique> <script> <silent> <Plug>TidalConfig :<c-u>TidalConfig<cr>
@@ -320,7 +338,7 @@ if !exists("g:tidal_preserve_curpos")
 end
 
 if !exists("g:tidal_flash_duration")
-  let g:tidal_flash_duration = 150
+  let g:tidal_flash_duration = 2
 end
 
 if filereadable(s:parent_path . "/.dirt-samples")

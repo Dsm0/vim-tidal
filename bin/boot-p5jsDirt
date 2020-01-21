@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euf -o pipefail
+
+# Get current directory (of script)
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+function setdir {
+  local source="${BASH_SOURCE[0]}"
+
+  # Resolve $SOURCE until the file is no longer a symlink
+  while [ -h "$source" ]; do
+    dir="$( cd -P "$( dirname "$source" )" && pwd )"
+    source="$(readlink "$source")"
+
+    # If $SOURCE was a relative symlink, we need to resolve it relative to the
+    # path where the symlink file was located
+    [[ $source != /* ]] && source="$DIR/$source"
+  done
+  DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+}
+
+setdir
+
+P5JSDIRT=${SUPERDIRT_BOOT_PATH:-"$DIR/../p5jsDirt/p5jsDirt-linux"}
+
+$P5JSDIRT

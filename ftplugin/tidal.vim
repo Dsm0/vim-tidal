@@ -52,22 +52,23 @@ if !exists("g:tidal_no_mappings") || !g:tidal_no_mappings
 
   if !hasmapto('<Plug>TidalRegionSend', 'x')
     xmap <buffer> <localleader>s  <Plug>TidalRegionSend
-    xmap <buffer> <c-e> <Plug>TidalRegionSend
+    xmap <buffer> <c-l> <Plug>TidalRegionSend
   endif
 
   if !hasmapto('<Plug>TidalLineSend', 'n')
     nmap <buffer> <localleader>s  <Plug>TidalLineSend
+    nmap <buffer> <c-k> <Plug>TidalLineSend
   endif
 
   if !hasmapto('<Plug>TidalParagraphSend', 'n')
     nmap <buffer> <localleader>ss <Plug>TidalParagraphSend
-    nmap <buffer> <c-e> <Plug>TidalParagraphSend
+    nmap <buffer> <c-l> <Plug>TidalParagraphSend
   endif
 
-  imap <buffer> <c-e> <Esc><Plug>TidalParagraphSend<Esc>i<Right>
+  imap <buffer> <c-l> <Esc><Plug>TidalParagraphSend<Esc>i<Right>
 
-  nnoremap <buffer> <localleader>h :TidalHush<cr>
-  nnoremap <buffer> <c-h> :TidalHush<cr>
+  map <c-.> TidalHush
+
   let i = 1
   while i <= 9
     execute 'nnoremap <buffer> <localleader>'.i.'  :TidalSilence '.i.'<cr>'
