@@ -1,3 +1,6 @@
 [submodule "st"]
 	path = st
 	url = git://git.suckless.org/st
+[submodule "Orca-c"]
+	path = Orca-c
+	url = https://github.com/hundredrabbits/Orca-c.git

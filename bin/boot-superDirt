@@ -20,7 +20,7 @@ function setdir {
 
 setdir
 
-SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../startup.scd"}
+SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../init/startup.scd"}
 SCLANG=${SCLANG:-"/bin/sclang"}
 
 $SCLANG $SUPERDIRT_BOOT_PATH

@@ -26,4 +26,3 @@ s.waitForBoot {
 //
 s.latency = 0.3; // increase this if you get "late" messages
 ~dirt.startSendRMS
-

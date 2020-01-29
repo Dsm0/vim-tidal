@@ -20,21 +20,6 @@ function! s:TmuxSend(config, text)
 endfunction
 
 
-
-function! s:TmuxSendSclang(config, text)
-  let l:prefix = "tmux -L " . shellescape(a:config["socket_name"])
-  " use STDIN unless configured to use a file
-  if !exists("g:tidal_paste_file")
-    call system(l:prefix . " load-buffer -", a:text)
-  else
-    call s:WritePasteFile(a:text)
-    call system(l:prefix . " load-buffer " . g:tidal_paste_file)
-  end
-  call system(l:prefix . " paste-buffer -d -t " . shellescape(a:config["sclang_pane"]))
-endfunction
-
-
-
 function! s:TmuxPaneNames(A,L,P)
   let format = '#{pane_id} #{session_name}:#{window_index}.#{pane_index} #{window_name}#{?window_active, (active),}'
   return system("tmux -L " . shellescape(b:tidal_config['socket_name']) . " list-panes -a -F " . shellescape(format))
@@ -46,6 +31,11 @@ function! s:TmuxConfig() abort
   end
 
   let b:tidal_config["socket_name"] = input("tmux socket name: ", b:tidal_config["socket_name"])
+  let b:tidal_config["sclang_pane"] = input("tmux target pane: ", b:tidal_config["sclang_pane"], "custom,<SNR>" . s:SID() . "_TmuxPaneNames")
+  if b:tidal_config["sclang_pane"] =~ '\s\+'
+    let b:tidal_config["sclang_pane"] = split(b:tidal_config["sclang_pane"])[0]
+  endif
+
   let b:tidal_config["target_pane"] = input("tmux target pane: ", b:tidal_config["target_pane"], "custom,<SNR>" . s:SID() . "_TmuxPaneNames")
   if b:tidal_config["target_pane"] =~ '\s\+'
     let b:tidal_config["target_pane"] = split(b:tidal_config["target_pane"])[0]
@@ -58,6 +48,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:tidal_term = -1
+let s:sclang_term = -1
 
 function! s:TerminalOpen()
   if !has('nvim')
@@ -235,6 +226,8 @@ let s:parent_path = fnamemodify(expand("<sfile>"), ":p:h:s?/plugin??")
 " Public interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+"REALLY IMPORTANT FUNCTIONS \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+"
 function! s:TidalSend(text)
   call s:TidalGetConfig()
 
@@ -244,6 +237,18 @@ function! s:TidalSend(text)
   endfor
 endfunction
 
+
+function TidalSend(text)
+  call s:TidalGetConfig()
+
+  let pieces = s:_EscapeText(a:text)
+  for piece in pieces
+    call s:TidalDispatch('Send', b:tidal_config, piece)
+  endfor
+endfunction
+
+
+"
 function! s:TidalConfig() abort
   call inputsave()
   call s:TidalDispatch('Config')
@@ -255,6 +260,53 @@ function! s:TidalDispatch(name, ...)
   let target = substitute(tolower(g:tidal_target), '\(.\)', '\u\1', '') " Capitalize
   return call("s:" . target . a:name, a:000)
 endfunction
+
+function! s:SclangDispatch(name, ...)
+  let target = substitute(tolower(g:sclang_target), '\(.\)', '\u\1', '') " Capitalize
+  return call("s:" . target . a:name, a:000)
+endfunction
+
+
+"REALLY IMPORTANT FUNCTIONS ^^^^^^^^^^^6
+"
+"
+"
+"MY revision::::
+function! s:PaneSend(text)
+  call s:TidalGetConfig()
+
+  let pieces = s:_EscapeText(a:text)
+  for piece in pieces
+    call s:PaneDispatch('Send', b:tidal_config, piece)
+  endfor
+endfunction
+
+
+function PaneSend(text)
+  call s:TidalGetConfig()
+
+  let pieces = s:_EscapeText(a:text)
+  for piece in pieces
+    call s:PaneDispatch('Send', b:tidal_config, piece)
+  endfor
+endfunction
+
+"
+function! s:Config() abort
+  call inputsave()
+  call s:PaneDispatch('Config')
+  call inputrestore()
+endfunction
+
+" delegation
+function! s:PaneDispatch(name, ...)
+  let target = substitute(tolower(g:tidal_target), '\(.\)', '\u\1', '') " Capitalize
+  return call("s:" . target . a:name, a:000)
+endfunction
+
+""""
+
+
 
 function! s:TidalHush()
   execute 'TidalSend1 hush'
@@ -312,8 +364,9 @@ noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>Tid
 
 noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
 noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
+" noremap <unique> <script> <silent> <Plug>SclangRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
 " noremap <unique> <script> <silent> <Plug>SclangLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
-" noremap <unique> <script> <silent> <Plug>TidalHush:<c-h>call <SID>TidalHush<cr>
+noremap <unique> <script> <silent> <Plug>TidalHush:<c-h>call <SID>TidalHush<cr>
 noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator
 noremap <unique> <script> <silent> <Plug>TidalParagraphSend <SID>Operatorip
 noremap <unique> <script> <silent> <Plug>TidalConfig :<c-u>TidalConfig<cr>

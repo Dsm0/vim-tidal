@@ -1,12 +1,31 @@
 #!/bin/bash
 set -euf -o pipefail
 
-# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # gets the path of the script, no matter where it is
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+function setdir {
+  local source="${BASH_SOURCE[0]}"
 
-VIM=${VIM:-"vim"}
+  # Resolve $SOURCE until the file is no longer a symlink
+  while [ -h "$source" ]; do
+    dir="$( cd -P "$( dirname "$source" )" && pwd )"
+    source="$(readlink "$source")"
+
+    # If $SOURCE was a relative symlink, we need to resolve it relative to the
+    # path where the symlink file was located
+    [[ $source != /* ]] && source="$DIR/$source"
+  done
+  DIR="$( cd -P "$( dirname "$source" )" && pwd )"
+}
+
+setdir
+
+VIM_CONFIG=${VIM_CONFIG:-"$DIR/../config/.vimrc"}
+# VIM_CONFIG=${VIM_CONFIG:-"/M/tidalcycles/vis/vim-tidal/config/.vimrc"}
+VIM=${VIM:-"nvim -u $VIM_CONFIG"}
+#VIM=${VIM:-"vim"}
 TMUX=${TMUX:-"tmux"}
-TMUX_ARGS=${TMUX_ARGS:-"-f ./config/tmux.conf"}
+# TMUX_ARGS=${TMUX_ARGS:-"-f ./config/tmux.conf"}
 
 FILE=${FILE:-"$(date +%F).tidal"}
 SESSION=${SESSION:-"tidal"}
@@ -14,8 +33,8 @@ SESSION=${SESSION:-"tidal"}
 MAIN_WINDOW=${MAIN_WINDOW:-"tidal-env"}
 BACKGROUND_WINDOW=${BACKGROUND_WINDOW:-"backgroundProc"}
 
-TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"/M/tidalcycles/initTidal/BootTidal.hs"}
-SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"/M/tidalcycles/initTidal/startup-script-form.scd"}
+TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../init/BootTidal.hs"}
+SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../init/startup-script-form.scd"}
 
 BOOT_JACK=${BOOT_JACK:-"jackd -d alsa -d hw:1,0"}
 
@@ -26,26 +45,31 @@ args=${@:-$FILE}
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
-st $TMUX -f -2 attach-session -t $SESSION || $TMUX -2 \
+$TMUX -f -2 attach-session -t $SESSION || $TMUX -2 \
+  set -s escape-time 0 \; \
+  set -g mouse on \; \
   new-session -s $SESSION -n $MAIN_WINDOW  \; \
-  split-window -v -t $SESSION   \; \
-  split-window -h -t $SESSION   \; \
   new-window -n $BACKGROUND_WINDOW     \; \
   select-window -t $BACKGROUND_WINDOW \; \
   split-window -h -t $BACKGROUND_WINDOW \; \
   split-window -v -t $BACKGROUND_WINDOW \; \
   split-window -v -t $BACKGROUND_WINDOW \; \
   select-layout main-vertical  \; \
-  send-keys "$BOOT_JACK" C-m  \; \
-  send-keys -t 1 "boot-p5jsDirt" C-m  \; \
+  send-keys -t 0 "boot-p5jsDirt" C-m  \; \
+  send-keys -t 1 "$BOOT_JACK" C-m  \; \
   send-keys -t 2 "$VIM $TIDAL_BOOT_PATH" C-m  \; \
   send-keys -t 3 "$VIM $SUPERDIRT_BOOT_PATH" C-m  \; \
   select-window -t $MAIN_WINDOW \; \
-  send-keys -t 0 "env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt" C-m   \; \
-  send-keys -t 1 "$VIM $args" C-m   \; \
+  split-window -v -t $SESSION   \; \
+  split-window -h -t $SESSION   \; \
+  send-keys -t 0 "$VIM $args" C-m   \; \
+  send-keys -t 1 "env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt" C-m   \; \
   send-keys -t 2 "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" C-m   \; \
-  select-pane -t 1 \; \
+  select-pane -t 0 \; \
   bind n next-window \; \
   bind p previous-window \; \
+  bind c-t send-keys -t 2 ":script $TIDAL_BOOT_PATH" C-m \; \
+  bind c-s send-keys -t 1 "" C-m \; \
   bind c-e kill-session \;  #here are just some useful bindings
 
+   # send-keys -t 2 "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" \; \
