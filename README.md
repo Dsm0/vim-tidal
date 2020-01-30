@@ -1,3 +1,5 @@
+This is a fork of tidalcycles/vim-tidal. When I think it's in a runnable state, I'll revise this readme.
+
 # vim-tidal #
 
 A Vim/NeoVim plugin for [TidalCycles](http://tidal.lurk.org/), the language for
