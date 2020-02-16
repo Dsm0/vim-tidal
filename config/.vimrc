@@ -50,11 +50,18 @@ nmap <buffer> <localleader>c <Plug>TidalConfig
 xmap <buffer> <localleader>s  <Plug>TidalRegionSend
 xmap <buffer> <c-l> <Plug>TidalRegionSend
 
+nmap <buffer> <localleader>ss <Plug>TidalParagraphSend
+nmap <buffer> <c-l> <Plug>TidalParagraphSend
+
 nmap <buffer> <localleader>s  <Plug>TidalLineSend
 nmap <buffer> <c-k> <Plug>TidalLineSend
 
-nmap <buffer> <localleader>ss <Plug>TidalParagraphSend
-nmap <buffer> <c-l> <Plug>TidalParagraphSend
+"xmap <buffer> <localleader>s  <Plug>SclangRegionSend
+"xmap <buffer> <c-L>           <Plug>SclangRegionSend
+
+"nmap <buffer> <localleader>s  <Plug>SclangLineSend
+"nmap <buffer> <c-l> 	      <Plug>SclangLineSend
+
 
 map <m-h> :TidalHush <Return>
 
