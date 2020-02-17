@@ -73,9 +73,19 @@ while i <= 9
   let i += 1
 endwhile
 
+" When the filetype is FILETYPE then make AutoPairs only match for parenthesis
+" au Filetype tidal let b:AutoPairs = {"(": ")"}
+
+if !exists('g:AutoPairsLoaded') || &cp
+  echo "AHAHAHAHHHAHAH"
+  finish
+end
+
+let g:AutoPairsFlyMode = 1
+echo 
+
 
 set nocp
 
 set noswapfile "feel free to change
 
-"so $VIMTIDAL_PLUGIN
