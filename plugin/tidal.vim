@@ -178,59 +178,6 @@ endfunction
 " Ideally, I'd have a more general function
 " I'll come back when I know more vimscript
 """""""""""""""""""""""""""""""""
-function! s:SclangSendOp(type, ...) abort
-  call s:TidalGetConfig()
-
-  let sel_save = &selection
-  let &selection = "inclusive"
-  let rv = getreg('"')
-  let rt = getregtype('"')
-
-  if a:0  " Invoked from Visual mode, use '< and '> marks.
-    silent exe "normal! `<" . a:type . '`>y'
-  elseif a:type == 'line'
-    silent exe "normal! '[V']y"
-  elseif a:type == 'block'
-    silent exe "normal! `[\<C-V>`]\y"
-  else
-    silent exe "normal! `[v`]y"
-  endif
-
-  call setreg('"', @", 'V')
-  call s:SclangSend(@")
-
-  " Flash selection
-  if a:type == 'line'
-    silent exe "normal! '[V']"
-    call s:TidalFlashVisualSelection()
-  endif
-
-  let &selection = sel_save
-  call setreg('"', rv, rt)
-
-  call s:TidalRestoreCurPos()
-endfunction
-
-function! s:SclangSendLines(count) abort
-  call s:TidalGetConfig()
-
-  let rv = getreg('"')
-  let rt = getregtype('"')
-
-  silent execute "normal! " . a:count . "yy"
-
-  call s:SclangSend(@")
-  call setreg('"', rv, rt)
-
-  " Flash lines
-  silent execute "normal! V"
-  if a:count > 1
-    silent execute "normal! " . (a:count - 1) . "\<Down>"
-  endif
-  call s:TidalFlashVisualSelection()
-endfunction
-
-
 
 function! s:TidalSendRange() range abort
   call s:TidalGetConfig()
@@ -294,16 +241,6 @@ function! s:TidalSend(text)
   endfor
 endfunction
 
-
-function SclangSend(text)
-  call s:TidalGetConfig()
-
-  let pieces = s:_EscapeText(a:text)
-  for piece in pieces
-    call s:SclangDispatch('Send', b:tidal_config, piece)
-  endfor
-endfunction
-
 "
 function! s:TidalConfig() abort
   call inputsave()
@@ -316,12 +253,6 @@ function! s:TidalDispatch(name, ...)
   let target = substitute(tolower(g:tidal_target), '\(.\)', '\u\1', '') " Capitalize
   return call("s:" . target . a:name, a:000)
 endfunction
-
-function! s:SclangDispatch(name, ...)
-  let target = substitute(tolower(g:sclang_target), '\(.\)', '\u\1', '') " Capitalize
-  return call("s:" . target . a:name, a:000)
-endfunction
-
 
 "REALLY IMPORTANT FUNCTIONS ^^^^^^^^^^^6
 "
@@ -408,7 +339,6 @@ endfunction
 command -bar -nargs=0 TidalConfig call s:TidalConfig()
 command -range -bar -nargs=0 TidalSend <line1>,<line2>call s:TidalSendRange()
 
-command -range -bar -nargs=0 SclangSend <line1>,<line2>call s:SclangSendRange()
 
 command -nargs=+ TidalSend1 call s:TidalSend(<q-args> . "\r")
 
@@ -421,9 +351,6 @@ noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>Tid
 
 noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
 noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
-
-noremap <unique> <script> <silent> <Plug>SclangRegionSend :<c-u>call <SID>SclangSendOp(visualmode(), 1)<cr>
-noremap <unique> <script> <silent> <Plug>SclangLineSend :<c-u>call <SID>SclangSendLines(v:count1)<cr>
 
 noremap <unique> <script> <silent> <Plug>TidalHush:<c-h>call <SID>TidalHush<cr>
 noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator

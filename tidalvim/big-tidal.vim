@@ -1657,9 +1657,8 @@ augroup END
 
 " SClang stuff
 
-
 " tidalvim binds
-let g:tidal_no_mappings = 1
+" let g:tidal_no_mappings = 1
 
 nmap <buffer> <localleader>c <Plug>TidalConfig
 
@@ -1704,4 +1703,3 @@ echo
 set nocp
 
 set noswapfile "feel free to change
-
