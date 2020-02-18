@@ -24,8 +24,8 @@ VIM_CONFIG=${VIM_CONFIG:-"$DIR/../config/vimrc"}
 VIMTIDAL_PLUGIN=${VIMTIDAL_PLUGIN:-"$DIR/../tidalvim/big-tidal.vim"}
 #VIM=${VIM:-"vim"}
 
-# VIM_CONFIG=${VIM_CONFIG:-"/M/tidalcycles/vis/vim-tidal/config/vimrc"}
-VIM=${VIM:-"/usr/bin/nvim -S $VIMTIDAL_PLUGIN -u $VIM_CONFIG"}
+# VIM=${VIM:-"/usr/bin/nvim -S $VIMTIDAL_PLUGIN -u $VIM_CONFIG"}
+VIM=${VIM:-"/usr/bin/nvim -u $VIMTIDAL_PLUGIN"}
 # TMUX_ARGS=${TMUX_ARGS:-"-f ./config/tmux.conf"}
 TMUX=${TMUX:-"tmux"}
 

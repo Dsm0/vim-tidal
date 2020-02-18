@@ -9,8 +9,9 @@ install:
 	ln -fs $(mkfile_path)/bin/tidalvim $(prefix)/bin
 	ln -fs $(mkfile_path)/bin/boot-superDirt $(prefix)/bin
 	ln -fs $(mkfile_path)/p5jsDirt/p5jsDirt-linux $(prefix)/bin
-	cat auto-pairs/plugin/auto-pairs.vim plugin/tidal.vim syntax/*.vim ftdetect/tidal.vim ftplugin/tidal.vim > tidalvim/big-tidal.vim
-	# honestly, ^^^ this hack-y line has saved me so much trouble trying to manage vim plugins
+	cat auto-pairs/plugin/auto-pairs.vim plugin/tidal.vim syntax/*.vim ftdetect/tidal.vim ftplugin/tidal.vim config/vimrc > tidalvim/big-tidal.vim
+	# currently, because of issues with plugins, the makefile just puts all the plugins and the config into one file, then loads that file
+	# it's poor practice and hacky, but it works for now
 
 .PHONY: install uninstall
    
