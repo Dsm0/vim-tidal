@@ -349,8 +349,13 @@ command! -nargs=? TidalGenerateCompletions call s:TidalGenerateCompletions(<q-ar
 
 noremap <SID>Operator :<c-u>call <SID>TidalStoreCurPos()<cr>:set opfunc=<SID>TidalSendOp<cr>g@
 
-noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
+"noremap <unique> <script> <silent> <Plug>TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
+
+noremap <unique> <script> <silent> TidalRegionSend :<c-u>call <SID>TidalSendOp(visualmode(), 1)<cr>
+
 noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
+
+"noremap <unique> <script> <silent> <Plug>TidalLineSend :<c-u>call <SID>TidalSendLines(v:count1)<cr>
 
 noremap <unique> <script> <silent> <Plug>TidalHush:<c-h>call <SID>TidalHush<cr>
 noremap <unique> <script> <silent> <Plug>TidalMotionSend <SID>Operator
