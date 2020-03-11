@@ -20,32 +20,45 @@ function setdir {
 
 setdir
 
-VIM_CONFIG=${VIM_CONFIG:-"$DIR/../tidalvim/big-vimrc"}
-VIMTIDAL_PLUGIN=${VIMTIDAL_PLUGIN:-"$DIR/../tidalvim/big-tidal.vim"}
-#VIM=${VIM:-"vim"}
 
-VIM=${VIM:-"/usr/bin/nvim -u $VIMTIDAL_PLUGIN"}
-# VIM=${VIM:-"/usr/bin/nvim -S $VIM_CONFIG -u $VIMTIDAL_PLUGIN"}
-# TMUX_ARGS=${TMUX_ARGS:-"-f ./config/tmux.conf"}
+VIMRUNTIME=${VIMRUNTIME:-"$DIR/../nvim-runtime-dirs"}
+VIMRC=${VIMRC:-"$VIMRUNTIME/vimrc"}
 TMUX=${TMUX:-"tmux"}
+
+
+PACKAGEDIR=${PACKAGEDIR:-"$VIMRUNTIME/pack"}
+
+
+VIM=${VIM:-"env VIMRUNTIME=$VIMRUNTIME PACKAGEDIR=$PACKAGEDIR $DIR/nvim -u $VIMRC"}
 
 
 FILE=${FILE:-"$(date +%F).tidal"}
 SESSION=${SESSION:-"tidal"}
 
+
 MAIN_WINDOW=${MAIN_WINDOW:-"tidal-env"}
 BACKGROUND_WINDOW=${BACKGROUND_WINDOW:-"backgroundProc"}
+
 
 TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../init/BootTidal.hs"}
 SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../init/startup-script-form.scd"}
 
+
 BOOT_JACK=${BOOT_JACK:-"jackd -d alsa -d hw:1,0"}
 BOOT_P5JS_DIRT=${BOOT_P5JS_DIRT:-"$DIR/../p5jsDirt/p5jsDirt-linux"}
+
+
+VIMPANE=${VIMPANE:-0}
+TIDALPANE=${TIDALPANE:-1}
+SUPERDIRTPANE=${SUPERDIRTPANE:-2}
+
 
 GHCI=${GHCI:-"ghci"}
 SCLANG=${SCLANG:-"sclang"}
 
+
 args=${@:-$FILE}
+
 
 
 # echo "$VIM -S $VIMTIDAL_PLUGIN $TIDAL_BOOT_PATH"
@@ -69,14 +82,14 @@ $TMUX -f -2 attach-session -t $SESSION || $TMUX -2 \
   select-window -t $MAIN_WINDOW \; \
   split-window -v -t $SESSION   \; \
   split-window -h -t $SESSION   \; \
-  send-keys -t 0 "$VIM $args" C-m   \; \
-  send-keys -t 1 "env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt" C-m   \; \
-  send-keys -t 2 "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" C-m   \; \
-  select-pane -t 0 \; \
+  send-keys -t $VIMPANE "$VIM $args" C-m   \; \
+  send-keys -t $TIDALPANE "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" C-m   \; \
+  send-keys -t $SUPERDIRTPANE "env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt" C-m   \; \
+  select-pane -t $VIMPANE \; \
   bind n next-window \; \
   bind p previous-window \; \
-  bind c-t send-keys -t 2 ":script $TIDAL_BOOT_PATH" C-m \; \
-  bind c-s send-keys -t 1 "" C-m \; \
+  bind c-t send-keys -t $TIDALPANE ":script $TIDAL_BOOT_PATH" C-m \; \
+  bind c-s send-keys -t $SUPERDIRTPANE "" C-m \; \
   bind c-e kill-session \;  #here are just some useful bindings
 
    # send-keys -t 2 "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" \; \
