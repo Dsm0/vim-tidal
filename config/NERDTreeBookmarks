@@ -1,0 +1,9 @@
+initFiles /M/tidalcycles/vis/vim-tidal/init
+
+### Bookmarked folders go in here with the format:
+### Name Path
+### for example:
+### initFiles /M/tidalcycles/vis/vim-tidal/init
+#
+### This is useful for quickly accessing different directories of tidal scripts
+### as well as different directories of samples

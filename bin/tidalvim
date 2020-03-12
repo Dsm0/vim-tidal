@@ -20,48 +20,7 @@ function setdir {
 
 setdir
 
-
-VIMRUNTIME=${VIMRUNTIME:-"$DIR/../nvim-runtime-dirs"}
-VIMRC=${VIMRC:-"$VIMRUNTIME/vimrc"}
-TMUX=${TMUX:-"tmux"}
-
-
-PACKAGEDIR=${PACKAGEDIR:-"$VIMRUNTIME/pack"}
-
-
-VIM=${VIM:-"env VIMRUNTIME=$VIMRUNTIME PACKAGEDIR=$PACKAGEDIR $DIR/nvim -u $VIMRC"}
-
-
-FILE=${FILE:-"$(date +%F).tidal"}
-SESSION=${SESSION:-"tidal"}
-
-
-MAIN_WINDOW=${MAIN_WINDOW:-"tidal-env"}
-BACKGROUND_WINDOW=${BACKGROUND_WINDOW:-"backgroundProc"}
-
-
-TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../init/BootTidal.hs"}
-SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../init/startup-script-form.scd"}
-
-
-BOOT_JACK=${BOOT_JACK:-"jackd -d alsa -d hw:1,0"}
-BOOT_P5JS_DIRT=${BOOT_P5JS_DIRT:-"$DIR/../p5jsDirt/p5jsDirt-linux"}
-
-
-VIMPANE=${VIMPANE:-0}
-TIDALPANE=${TIDALPANE:-1}
-SUPERDIRTPANE=${SUPERDIRTPANE:-2}
-
-
-GHCI=${GHCI:-"ghci"}
-SCLANG=${SCLANG:-"sclang"}
-
-
-args=${@:-$FILE}
-
-
-
-# echo "$VIM -S $VIMTIDAL_PLUGIN $TIDAL_BOOT_PATH"
+source $DIR/../config/paths
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes

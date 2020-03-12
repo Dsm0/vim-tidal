@@ -1,2 +1,2 @@
 #!/bin/bash
-jackd -d alsa -d hw:1,0
+jackd -d alsa -d hw:0,0

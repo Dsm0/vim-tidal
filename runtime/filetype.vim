@@ -680,8 +680,8 @@ au BufNewFile,BufRead *.haml			setf haml
 " Hamster Classic | Playground files
 au BufNewFile,BufRead *.hsc,*.hsm		setf hamster
 
-" Haskell
-au BufNewFile,BufRead *.hs,*.hs-boot		setf haskell
+" Haskell (plus tidalcycles support)
+au BufNewFile,BufRead *.hs,*.hs-boot,*.tidal	setf haskell
 au BufNewFile,BufRead *.lhs			setf lhaskell
 au BufNewFile,BufRead *.chs			setf chaskell
 
