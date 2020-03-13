@@ -33,15 +33,7 @@ set backspace=indent,eol,start	"" Backspace behaviour
 "" this line loads plug.vim before the other files in the autoload directory,
 "" because some of the other files depend on plug.vim being loaded
 
-exe join(["source ",expand($VIMRUNTIME),"/filetype.vim"],"")
-
-""exe join(["source ",expand($VIMRUNTIME),"/ftplugin.vim"],"")
-""exe join(["source ",expand($AUTOLOADDIR),"/paste.vim"],"")
-""exe join(["source ",expand($AUTOLOADDIR),"/dist/ft.vim"],"")
-
-""for f in split(glob(join([expand($AUTOLOADDIR),"/*.vim"],"")), '\n')
-""    exe 'source' f
-""endfor
+exe join(["source ",expand($VIMTIDALROOT),"/config/plug.vim"],"")
 
 call plug#begin(expand($PACKAGEDIR))
     Plug 'tidalcycles/vim-tidal'
@@ -55,6 +47,7 @@ augroup FastEscape
     au InsertEnter * set timeoutlen=0
     au InsertLeave * set timeoutlen=1000
 augroup END
+
 
 
 filetype plugin on
@@ -71,7 +64,6 @@ set noswapfile "feel free to change
 "" The Default NERDTree Bookmarks file
 let g:NERDTreeBookmarksFile= expand($BOOKMARKSFILE)
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Misc Bindings 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -86,16 +78,16 @@ xmap <C-D> :NERDTreeToggle <CR>
 
 let tidal_no_mappings = 1
 
-xmap <buffer> <c-l> <Plug>TidalParagraphSend
-nmap <buffer> <c-l> <Plug>TidalParagraphSend
+xmap <c-l> <Plug>TidalParagraphSend
+nmap <c-l> <Plug>TidalParagraphSend
 
-xmap <buffer> <c-k> <Plug>TidalLineSend
-nmap <buffer> <c-k> <Plug>TidalLineSend
+xmap <c-k> <Plug>TidalLineSend
+nmap <c-k> <Plug>TidalLineSend
 
 
 "for when you want to send text that isn't just a line or a paragraph
-xmap <buffer> <c-j> <Plug>TidalMotionSend
-nmap <buffer> <c-j> <Plug>TidalMotionSend
+xmap <c-j> <Plug>TidalMotionSend
+nmap <c-j> <Plug>TidalMotionSend
 
 xmap <m-h> :TidalHush <Return>
 nmap <m-h> :TidalHush <Return>
