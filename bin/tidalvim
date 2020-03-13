@@ -54,4 +54,3 @@ $TMUX -f -2 attach-session -t $SESSION || $TMUX -2 \
   bind c-s send-keys -t $SUPERDIRTPANE "^C" "$BOOT_SUPERCOLLIDER" C-m \; \
   bind c-e kill-session \;  #here are just some useful bindings
 
-   # send-keys -t 2 "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" \; \

@@ -42,13 +42,13 @@ call plug#begin(expand($PACKAGEDIR))
     Plug 'preservim/nerdtree'
 call plug#end()
 
+
+
 augroup FastEscape
     autocmd!
     au InsertEnter * set timeoutlen=0
     au InsertLeave * set timeoutlen=1000
 augroup END
-
-
 
 filetype plugin on
 syntax on
@@ -68,9 +68,12 @@ let g:NERDTreeBookmarksFile= expand($BOOKMARKSFILE)
 "" Misc Bindings 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+"""NERDTree
+
 nmap <C-D> :NERDTreeToggle <CR>
 xmap <C-D> :NERDTreeToggle <CR>
 
+let NERDTreeShowBookmarks=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Tidal mappings
