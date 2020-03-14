@@ -22,9 +22,9 @@ setdir
 
 source $DIR/../config/paths
 
-if [$1]
+if [ ${1-default} ]
 then
-  FILE=$1
+  FILE=${1-default}
 fi
 
 
