@@ -2,6 +2,7 @@ import Sound.Tidal.Context
 import Data.List
 
 :{
+
 let (&) = (|*|)
     lofi = (crush 5.5 # shape 0.8 # lpf 700 # bandf 500 # bpq 0.4)
     ripOLD a b p = within (0.25, 0.75) (slow 2 . rev . stut 8 a b) p
@@ -39,7 +40,7 @@ let (&) = (|*|)
     inv 0 = 1
     inv 11 = 0
     inv 10 = 1
-    -- bpm x = setcps (x/120)
+    bpm x = setcps (x/120)
     brakk samps = ((# unit "c") . (# speed "8")) $ sound (samples samps (irand 30))
     brakk4 samps = ((# unit "c") . (# speed "4")) $ sound (samples samps (irand 30))
     move p = foldEvery [3,4] (0.25 <~) $ p
@@ -142,40 +143,15 @@ let (&) = (|*|)
     sUp y x = speed (((y + x)/ y))
     nUy y x = up (((y + x)/ y))
     -- frange x y = s((# hpf x) . (# lpf y))
+    chordList =["6by9","'7f10","'7f5","'7f9","'7s5","'7s5f9","'7sus2","'7sus4","'9s5","'9sus4","'aug","'dim","'dim7","'dom7","'eleven","'elevenSharp","'five","'m11","'m11s","'m11sharp","'m13m6","'m6by9","'m7f5","'m7f9","'m7flat5","'m7flat9","'m7s5","'m7s9","'m7sharp5","'m7sharp5flat9","'m7sharp9","'m9","'m9s5","'m9sharp5","'maj","'maj11","'maj7",    +++"'maj9","'major","'major7","'min","'min7","'minor","'minor7","'msharp5","'nine","'nineSharp5","'nineSus4","'ninesus4","'one","'plus","'sevenFlat10","'sevenFlat5","'sevenFlat9","'sevenSharp5","'sevenSharp5flat9","'sevenSus2","'sevenSus4","'sharp5","'six","'sixby9","'sus2","'sus4","'thirteen"]
 
-let chordList =["6by9","'7f10","'7f5","'7f9","'7s5","'7s5f9","'7sus2","'7sus4","'9s5","'9sus4","'aug","'dim","'dim7","'dom7","'eleven","'elevenSharp","'five","'m11","'m11s","'m11sharp","'m13m6","'m6by9","'m7f5","'m7f9","'m7flat5","'m7flat9","'m7s5","'m7s9","'m7sharp5","'m7sharp5flat9","'m7sharp9","'m9","'m9s5","'m9sharp5","'maj","'maj11","'maj7",    +++"'maj9","'major","'major7","'min","'min7","'minor","'minor7","'msharp5","'nine","'nineSharp5","'nineSus4","'ninesus4","'one","'plus","'sevenFlat10","'sevenFlat5","'sevenFlat9","'sevenSharp5","'sevenSharp5flat9","'sevenSus2","'sevenSus4","'sharp5","'six","'sixby9","'sus2","'sus4","'thirteen"]
-
-
-let resetCyclesTo n = T.changeTempo (sTempoMV tidal) (\t tempo -> tempo {T.atTime = t, T.atCycle = n})
-    getNow = do tempo <- readMVar $ sTempoMV tidal
-                time <- O.time
-                return $ T.timeToCycles tempo time
-    tick n = do now <- getNow
-                threadDelay $ 1000000 `div` 20
-                let steps = 16
-                    n' = floor $ sam (now * 16)
-                    cycles = n' `div` 16
-                CM.when (n /= n') $
-                  putStr $ show cycles ++ " | " ++ wave n' ++ "\r"
-                tick n
-    wave n = drop i s ++ take i s
-          where
-            s = "¸.·´¯`·.´¯`·.¸¸.·´¯`·.¸.·<º)))><" -- :: String
-            i = n `mod` (length s)
-    showFish = tick 0
-
-let pFont = pS "font"
-    pRotate = pF "rotate"
-    testFont = "AkrutiTml2Bold-48.vlw"
-    pX = pF "x"
-    pSize = pF "dispTextSize"
-    pY = pF "y"
-    pXY x y = (pX x # pY y)
-
-let gain' x = gain x # pSize (x ** 2)
-
-let draw = makeDraw tidal
-    load = makeLoad tidal
-    createImg = makeImageUrlLoader tidal
-    reset function = function (pack (makeJSVar ""))
 :}
+
+
+:{
+
+let dirtSounds = "~/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/*"
+    mntPt x = "/media/ick/5EB068D0139EDA18/" ++ x
+
+:}
+

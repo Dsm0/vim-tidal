@@ -3,13 +3,13 @@
 :set prompt-cont ""
 
 import Sound.Tidal.Context
-import Control.Concurrent (threadDelay)
-import Control.Concurrent.MVar (readMVar)
+-- import Control.Concurrent (threadDelay)
+-- import Control.Concurrent.MVar (readMVar)
 import qualified Control.Monad as CM
 import qualified Sound.OSC.FD as O
 import qualified Sound.Tidal.Tempo as T
-import P5hs
-
+import qualified Data.Map as Map_
+-- import P5hs
 
 :{
 let p5jsTarget :: OSCTarget
@@ -91,7 +91,6 @@ let p = streamReplace tidal
     pXY x y = (pX x # pY y)
 :}
 
-
 :{
 let setI = streamSetI tidal
     setF = streamSetF tidal
@@ -100,11 +99,86 @@ let setI = streamSetI tidal
     setB = streamSetB tidal
 :}
 
+:{
+let changeFunc' stream list = sendFunc' list
+      where toEvent' ws we ps pe v = Event (Sound.Tidal.Context.Context []) (Just $ Sound.Tidal.Context.Arc ws we) (Sound.Tidal.Context.Arc ps pe) v
+              -- where [ws',we',ps',pe'] = map toRational [ws,we,ps,pe]
+            makeFakeMap list_ = Map_.fromList list_
+            makeFuncHelp :: [(String,Value)] -> ControlPattern
+            makeFuncHelp y = Pattern $ fakeEvent (makeFakeMap y:: ControlMap)
+              where fakeEvent a notARealArgument = [(toEvent' 0 1 0 1) a]
+            makeFunc :: [(String,Value)] -> [ControlPattern]
+            makeFunc x = [makeFuncHelp x]
+            sendFunc' = mapM_ (streamFirst stream) . makeFunc
+    scMessage = pS "scMessage"
+    loadSoundFiles' stream path = changeFunc' stream list
+      where list = [("scMessage",VS "loadSoundFiles"),("filePath",VS path)]
+    loadSynthDefs' stream path = changeFunc' stream list
+      where list = [("scMessage",VS "loadSoundFileFolder"),("filePath",VS path)]
+    loadOnly' stream path = changeFunc' stream list
+      where list = [("scMessage",VS "loadOnly"),("filePath",VS path)]
+    loadSoundFileFolder' stream path = changeFunc' stream list
+      where list = [("scMessage",VS "loadSoundFileFolder"),("filePath",VS path)]
+    loadSoundFile' stream path = changeFunc' stream list
+      where list = [("scMessage",VS "loadSoundFile"),("filePath",VS path)]
+    freeAllSoundFiles' stream = changeFunc' stream list
+      where list = [("scMessage",VS "freeAllSoundFiles")]
+    freeSoundFiles' stream name = changeFunc' stream list
+      where list = [("scMessage",VS "freeSoundFiles"),("filePath",VS name)]
+    postSampleInfo' stream = changeFunc' stream list
+      where list = [("scMessage",VS "postSampleInfo")]
+    initFreqSynthWindow' stream = changeFunc' stream list
+      where list = [("scMessage",VS "initFreqSynthWindow")]
+:}
+
 
 :{
-let draw = makeDraw tidal
-    loadImage = makeShader tidal
-    loadShader = makeShader tidal
+-- functions for sending paths to load into superDirt
+let loadSoundFiles path = loadSoundFiles' tidal path 
+    loadSynthDefs path = loadSynthDefs' tidal path
+    loadOnly path = loadOnly' tidal path
+    loadSoundFileFolder path = loadSoundFileFolder' tidal path 
+    loadSoundFile path = loadSoundFile' tidal path
+    freeAllSoundFiles = freeAllSoundFiles' tidal
+    freeSoundFiles name = freeSoundFiles' tidal name
+    postSampleInfo = postSampleInfo' tidal
+    initFreqSynthWindow = initFreqSynthWindow' tidal
 :}
+
+
+-- -- for use with P5hs
+-- :{
+-- let changeFunc stream func newFunction = changeFunc' stream list
+--       where list = [(func, VS (render newFunction))]
+--             resetFunc stream func = changeFunc stream func (makeJSVar "")
+--     -- 
+--     makeDraw stream newFunction = changeFunc stream "draw" newFunction
+--     -- 
+--     makeImageUrlLoader stream imageURL = do
+--       changeFunc' stream list
+--       return $ makeJSVar (removePunc imageURL)
+--         where varName = removePunc imageURL
+--               imageURLVar = makeJSVar imageURL
+--               list = [("imageName",VS varName),("imageURL",VS imageURL)]
+--               -- the imageName is just the imageURL without any punctuation marks
+--               -- this was done so that you could refer to the image with only one variable
+--               --    the addition of a name is only for having a key:data pair that can be stored in an object
+--     -- 
+--     makeShader stream (shaderName, shaderVert, shaderFrag) = do
+--       changeFunc' stream list
+--       return $ makeJSVar shaderName
+--         where list = [("shaderName",VS shaderName),("shaderVert",VS shaderVert),("shaderFrag",VS shaderFrag)]
+-- :}
+
+
+-- :{
+-- let draw = makeDraw tidal
+--     loadImage = makeShader tidal
+--     loadShader = makeShader tidal
+--     reset function = function (pack (makeJSVar ""))
+     -- ^^^ this function is used to reset the values of P5hs functions
+    --  ie. 'reset draw' would erase the draw function
+-- :}
+
 
 :set prompt "tidal> "

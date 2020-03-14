@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# a bunch of different paths used to define this custom configuration
+# I wouldn't change everything all at once, because some of the 
+
+# the function setting the enviornment variable $DIR is called form tidalvim 
+# it sets $DIR to the path where tidalvim is located
+# so $DIR is usually (the-path-to-this-plugin)/bin
+
+# VIMRUNTIME=${VIMRUNTIME:-"$DIR/../runtime"}
+VIMTIDALROOT=${VIMTIDALROOT:-"$DIR/.."}
+VIMRC=${VIMRC:-"$DIR/../config/vimrc"}
+TMUX=${TMUX:-"tmux"}
+
+
+# AUTOLOADDIR=${PACKAGEDIR:-"$VIMRUNTIME/autoload"}
+PACKAGEDIR=${PACKAGEDIR:-"$VIMTIDALROOT/pack"}
+BOOKMARKSFILE=${BOOKMARKSFILE:-"$DIR/../config/NERDTreeBookmarks"}
+
+
+FILE=${FILE:-"$(date +%F).tidal"}
+SESSION=${SESSION:-"tidal"}
+
+
+MAIN_WINDOW=${MAIN_WINDOW:-"tidal-env"}
+BACKGROUND_WINDOW=${BACKGROUND_WINDOW:-"backgroundProc"}
+
+TIDAL_BOOT_PATH=${TIDAL_BOOT_PATH:-"$DIR/../init/BootTidal.hs"}
+SUPERDIRT_BOOT_PATH=${SUPERDIRT_BOOT_PATH:-"$DIR/../init/startup-script-form.scd"}
+
+# my personal samples path
+SAMPLES_PATH=${SAMPLES_PATH:-"/media/ick/5EB068D0139EDA18"}
+
+
+
+VIM=${VIM:-"env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH VIMTIDALROOT=$VIMTIDALROOT BOOKMARKSFILE=$BOOKMARKSFILE PACKAGEDIR=$PACKAGEDIR /usr/bin/nvim -u $VIMRC"}
+
+
+BOOT_JACK=${BOOT_JACK:-"jackd -d alsa -d hw:0,0"}
+BOOT_P5JS_DIRT=${BOOT_P5JS_DIRT:-"$DIR/../p5jsDirt/p5jsDirt-linux"}
+
+VIMPANE=${VIMPANE:-0}
+TIDALPANE=${TIDALPANE:-1}
+SUPERDIRTPANE=${SUPERDIRTPANE:-2}
+
+GHCI=${GHCI:-"ghci"}
+SCLANG=${SCLANG:-"sclang"}
+
+args=${@:-$FILE}
+
