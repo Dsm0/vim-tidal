@@ -22,6 +22,12 @@ setdir
 
 source $DIR/../config/paths
 
+if [$1]
+then
+  FILE=$1
+fi
+
+
 BOOT_TIDAL="env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal"
 BOOT_SUPERCOLLIDER="env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt"
 
