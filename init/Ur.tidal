@@ -1,0 +1,15 @@
+let robo x = loopAt 8 $ shiftBy (2/8) $ chop 32 $ x # cut "-1"
+    preFx  =   [("short", (# sus 0.1)),
+                ("linger", linger 0.5),
+                ("sply", ply "2" . slow 2),
+                ("ply", ply "2"),
+                ("lofi",(# lofi)),
+                ("louder",(& gain 1.7)),
+                ("fast", fast 8),
+                ("stut", stut 4 0.25 0.125),
+                ("panner",(# pan (slow 2 $ sine*2))),
+                ("slinger", linger 0.125),
+                ("stripe", stripe 2),
+                ("basser", off "0.125 0.25" ((# up "-12").(# sus 0.1)).(# cut 3)),
+                ("pat1", (struct "t t [f t] [f f t f]")),
+                ("pat2", (struct "[t f t t f]"))]

@@ -2,9 +2,11 @@
 set number	"" Show line numbers
 set linebreak	"" Break lines at word (requires Wrap lines)
 set showbreak=+++	"" Wrap-broken line prefix
-set textwidth=100	"" Line wrap (number of cols)
+set textwidth=0 "" Line wrap (number of cols)
 set showmatch	"" Highlight matching brace
 set visualbell	"" Use visual bell (no beeping)
+
+set nowrap
 
 set hlsearch	"" Highlight all search results
 set smartcase	"" Enable smart-case search
@@ -58,7 +60,7 @@ au Filetype tidal let b:AutoPairs = {"(": ")",'"':'"',"[":"]","{":"}","<":">"}
 
 set nocp
 
-set noswapfile "feel free to change
+"""set noswapfile "feel free to change
 
 
 "" The Default NERDTree Bookmarks file
@@ -67,6 +69,9 @@ let g:NERDTreeBookmarksFile= expand($BOOKMARKSFILE)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Misc Bindings 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""Autopairs
+let g:AutoPairsFlyMode = 0
 
 """NERDTree
 
