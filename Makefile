@@ -2,7 +2,6 @@ mkfile_path := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 prefix=/usr/local
 
-
 # todo: add checks for the installation of neovim, supercollider, ghc, tidal, and P5hs
 install:
 	ln -fs $(mkfile_path)/bin/boot-vim-tidal $(prefix)/bin

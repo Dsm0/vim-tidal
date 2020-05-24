@@ -1,6 +1,7 @@
-initFiles /M/tidalcycles/vis/vim-tidal/init
 Func.tidal /M/tidalcycles/vis/vim-tidal/init/Func.tidal
+initFiles /M/tidalcycles/vis/vim-tidal/init
 
+5EB068D0139EDA18 /run/media/will/5EB068D0139EDA18
 sampleDrive /media/ick/5EB068D0139EDA18
 tidalSamplesOld /media/ick/5EB068D0139EDA18/tidalSamples
 ### NOTE: when the file is loaded into NERDTree, all the bookmarks will be shifed to the top of the file
