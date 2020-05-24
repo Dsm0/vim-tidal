@@ -45,8 +45,10 @@ s.waitForBoot {
 //	~dirt.loadSoundFiles("/M/Documents/unsorted_wavs");
 };
 
+//To accept MIDI in to Tidal we need to run a bit more code - this lets SuperCollider convert MIDI inputs from your controller into OSC messages
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
+
 
 osc = NetAddr.new("127.0.0.1", 6010);
 
@@ -54,37 +56,29 @@ MIDIClient.init;
 MIDIIn.connectAll;
 
 on = MIDIFunc.noteOn({ |val, num, chan, src|
-  if(true){
-	"noteOn ".post;
-	("val: " ++ val.asString).post;
-	("num: " ++ num.asString).post;
-	("chan: " ++ chan.asString).post;
-	("src: " ++ src.asString).postln;
-  };
-	osc.sendMsg("/ctrl", num.asString, val/127);
+
+osc.sendMsg("/ctrl", "n", num); // if I remember correctly this was the bit I changed to get notes in!
+
 });
 
 off = MIDIFunc.noteOff({ |val, num, chan, src|
-	//("/ctrl", num.asString, 0).postln;
-	osc.sendMsg("/ctrl", num.asString, 0);
+osc.sendMsg("/ctrl", "n", 0);
 });
 
 cc = MIDIFunc.cc({ |val, num, chan, src|
-//	("/ctrl", num.asString, val/127).postln;
-	osc.sendMsg("/ctrl", num.asString, val/127);
+osc.sendMsg("/ctrl", num.asString, val/127);
+
 });
-if (~stopMidiToOsc != nil, { ~stopMidiToOsc.value;
+
+if (~stopMidiToOsc != nil, {
+~stopMidiToOsc.value;
 });
 
 ~stopMidiToOsc = {
-	on.free;
-	off.free;
-	cc.free;
+on.free;
+off.free;
+cc.free;
 };
-
-// Evaluate the line below to stop it.
-//~stopMidiToOsc.value;
-
 
 
 
