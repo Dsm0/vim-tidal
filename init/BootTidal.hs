@@ -1,6 +1,12 @@
+:set -package vivid
+-- import Vivid as V
+-- by defaut, the synth-defining package "vivid" is hidden
+-- but if you unhide a package, it unloads all other package
+-- that's why it's at the top here
 :set -XOverloadedStrings
 :set prompt ""
 :set prompt-cont ""
+:set -XDataKinds
 
 import Sound.Tidal.Context
 -- import Control.Concurrent (threadDelay)
@@ -14,7 +20,7 @@ import P5hs
 :{
 let p5jsTarget :: OSCTarget
     p5jsTarget = superdirtTarget {oName = "processing",
-                                oAddress = "127.0.0.1", oPort = 57130,
+                                oAddress = "127.0.0.1", oPort = 57110,
                                 oLatency = 0.1,
                                 oTimestamp = MessageStamp
                                }
@@ -32,16 +38,34 @@ import Data.List
 -- import qualified Vivid as V
 
 :{
-tidal <- startMulti
-          [
-           superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120}
-           ,
-           p5jsTarget
-           ,
-           scMessageTarget
-          ]
-         (defaultConfig {cFrameTimespan = 1/20})
+tidal <- startMulti [superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120} ] 
+                        (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
 :}
+
+:{
+scMessage <- startMulti [superdirtTarget {oLatency = 0.1,oAddress = "127.0.0.1", oPort = 57120, oPath = "/scMessage"}]
+                          (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+:}
+
+:{
+glslViewerTarget :: OSCTarget
+glslViewerTarget = OSCTarget {oName = "glslViewer",
+                           oAddress = "127.0.0.1",
+                           oPort = 57140,
+                           oPath = "/u_",
+                           oPreamble = [],
+                           oShape = Just [("level", Just $ VF 0)],  
+                           oLatency = 0.02,
+                           oTimestamp = MessageStamp
+                            }
+:}
+
+:{
+--glslViewer <- startMulti [glslViewerTarget] (defaultConfig {cFrameTimespan = 1/20 , cCtrlPort = 6011, cTempoPort = 9611})
+:}
+
+
+
 
 import qualified Data.Map.Strict as Map
 
@@ -120,11 +144,10 @@ let changeFunc' stream list = sendFunc' list
             makeFunc :: [(String,Value)] -> [ControlPattern]
             makeFunc x = [makeFuncHelp x]
             sendFunc' = mapM_ (streamFirst stream) . makeFunc
-    scMessage = pS "scMessage"
     loadSoundFiles' stream path = changeFunc' stream list
       where list = [("scMessage",VS "loadSoundFiles"),("filePath",VS path)]
     loadSynthDefs' stream path = changeFunc' stream list
-      where list = [("scMessage",VS "loadSoundFileFolder"),("filePath",VS path)]
+      where list = [("scMessage",VS "loadSynthDefs"),("filePath",VS path)]
     loadOnly' stream path = changeFunc' stream list
       where list = [("scMessage",VS "loadOnly"),("filePath",VS path)]
     loadSoundFileFolder' stream path = changeFunc' stream list
@@ -144,15 +167,20 @@ let changeFunc' stream list = sendFunc' list
 
 :{
 -- functions for sending paths to load into superDirt
-let loadSoundFiles path = loadSoundFiles' tidal path 
-    loadSynthDefs path = loadSynthDefs' tidal path
-    loadOnly path = loadOnly' tidal path
-    loadSoundFileFolder path = loadSoundFileFolder' tidal path 
-    loadSoundFile path = loadSoundFile' tidal path
-    freeAllSoundFiles = freeAllSoundFiles' tidal
-    freeSoundFiles name = freeSoundFiles' tidal name
-    postSampleInfo = postSampleInfo' tidal
-    initFreqSynthWindow = initFreqSynthWindow' tidal
+let loadSoundFiles path = loadSoundFiles' scMessage path 
+    loadSynthDefs path = loadSynthDefs' scMessage path
+    loadOnly path = loadOnly' scMessage path
+    loadSoundFileFolder path = loadSoundFileFolder' scMessage path 
+    loadSoundFile path = loadSoundFile' scMessage path
+    freeAllSoundFiles = freeAllSoundFiles' scMessage
+    freeSoundFiles name = freeSoundFiles' scMessage name
+    postSampleInfo = postSampleInfo' scMessage
+    initFreqSynthWindow = initFreqSynthWindow' scMessage
+:}
+
+:{
+--let g = streamReplace glslViewer
+--    hushGlsl = streamHush glslViewer
 :}
 
 

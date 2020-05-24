@@ -41,12 +41,20 @@ call plug#begin(expand($PACKAGEDIR))
     Plug 'tidalcycles/vim-tidal'
     Plug 'jiangmiao/auto-pairs'
     Plug 'supercollider/scvim'
-    Plug 'preservim/nerdtree'
-    Plug 'preservim/nerdtree'
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'tpope/vim-commentary'
+    Plug 'preservim/nerdtree'
+    if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
 call plug#end()
 
+autocmd FileType tidal setlocal commentstring=--\ %s
+map <C-_> <Plug>CommentaryLine
 
 
 augroup FastEscape
@@ -82,6 +90,11 @@ nmap <C-D> :NERDTreeToggle <CR>
 xmap <C-D> :NERDTreeToggle <CR>
 
 let NERDTreeShowBookmarks=1
+
+" many many thanks to Ingo Karkat
+" https://stackoverflow.com/a/16378375
+
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Tidal mappings

@@ -13,6 +13,10 @@ s.waitForBoot {
 	// s.sync; // optionally: wait for samples to be read
     //
     //
+    SynthDef(\foo1, {|out=0, freq=440| Out.ar(out, DC.ar(0)) }).add;
+    SynthDef(\foo2, {|out=0, freq=440| Out.ar(out, DC.ar(0)) }).add;
+    ~dirt.soundLibrary.addSynth(\foo1);
+    ~dirt.soundLibrary.addSynth(\foo2);
 	~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
 	// optional, needed for convenient access from sclang:
 	(
@@ -25,4 +29,4 @@ s.waitForBoot {
 };
 //
 s.latency = 0.3; // increase this if you get "late" messages
-~dirt.startSendRMS
+// ~dirt.startSendRMS
