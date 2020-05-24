@@ -18,6 +18,7 @@ PACKAGEDIR=${PACKAGEDIR:-"$VIMTIDALROOT/pack"}
 BOOKMARKSFILE=${BOOKMARKSFILE:-"$DIR/../config/NERDTreeBookmarks"}
 
 
+# Default filename and location
 FILE=${FILE:-"/tmp/$(date +%F).tidal"}
 SESSION=${SESSION:-"tidal"}
 
