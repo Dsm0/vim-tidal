@@ -49,7 +49,7 @@ s.waitForBoot {
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 
-
+(
 osc = NetAddr.new("127.0.0.1", 6010);
 
 MIDIClient.init;
@@ -79,7 +79,7 @@ on.free;
 off.free;
 cc.free;
 };
-
+);
 
 
 s.latency = 0.3; //increase this if you get "late" messages

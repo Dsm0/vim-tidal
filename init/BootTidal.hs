@@ -1,4 +1,4 @@
-:set -package vivid
+-- :set -package vivid
 -- import Vivid as V
 -- by defaut, the synth-defining package "vivid" is hidden
 -- but if you unhide a package, it unloads all other package
@@ -12,51 +12,60 @@ import Sound.Tidal.Context
 -- import Control.Concurrent (threadDelay)
 -- import Control.Concurrent.MVar (readMVar)
 import qualified Control.Monad as CM
-import qualified Sound.OSC.FD as O
+import qualified Sound.Tidal.Stream
 import qualified Sound.Tidal.Tempo as T
 import qualified Data.Map as Map_
-import P5hs
+-- import P5hs
+--
+
+-- used for sending custom calls to superdirt functions on a specific OSC path
+:{
+superdirtTargetOSC :: OSC
+superdirtTargetOSC = OSC "/scMessage" $ Named {required = []}
+:}
+
+
+-- almost-copy of startTidal, just with a path change
+:{
+startSCMessage :: Target -> Config -> IO Stream
+startSCMessage target config = startStream config [(target, [superdirtTargetOSC])]
+:}
+
+
 
 :{
-let p5jsTarget :: OSCTarget
+let p5jsTarget :: Target
     p5jsTarget = superdirtTarget {oName = "processing",
-                                oAddress = "127.0.0.1", oPort = 57110,
-                                oLatency = 0.1,
-                                oTimestamp = MessageStamp
-                               }
+                                  oAddress = "127.0.0.1", oPort = 57110,
+                                  oLatency = 0.1
+                                }
 :}
 
 :{
-let scMessageTarget :: OSCTarget
-    scMessageTarget = superdirtTarget {oName = "scMessage",oPath = "/scMessage"}
+let scMessageTarget :: Target
+    scMessageTarget = superdirtTarget {oName = "scMessage",oAddress = "127.0.0.1", oPort = 57120} 
 :}
 
 
 
 
 import Data.List
--- import qualified Vivid as V
 
 :{
-tidal <- startMulti [superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120} ] 
+tidal <- startTidal (superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120})
                         (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
 :}
 
 :{
-scMessage <- startMulti [superdirtTarget {oLatency = 0.1,oAddress = "127.0.0.1", oPort = 57120, oPath = "/scMessage"}]
-                          (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+scMessage <- startSCMessage scMessageTarget (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
 :}
 
 :{
-glslViewerTarget :: OSCTarget
-glslViewerTarget = OSCTarget {oName = "glslViewer",
-                           oAddress = "127.0.0.1",
+glslViewerTarget :: Target
+glslViewerTarget = superdirtTarget {oName = "glslViewer",
+                           oAddress = "127.0.0.1:/u_",
                            oPort = 57140,
-                           oPath = "/u_",
-                           oPreamble = [],
-                           oShape = Just [("level", Just $ VF 0)],  
-                           oLatency = 0.02,
-                           oTimestamp = MessageStamp
+                           oLatency = 0.02
                             }
 :}
 
@@ -80,7 +89,7 @@ let p = streamReplace tidal
     once = streamOnce tidal
     asap = once
     nudgeAll = streamNudgeAll tidal
-    all = streamAll tidal
+    neall = streamAll tidal
     resetCycles = streamResetCycles tidal
     setcps = asap . cps
     xfade i = transition tidal True (Sound.Tidal.Transition.xfadeIn 4) i
