@@ -15,50 +15,59 @@ import qualified Control.Monad as CM
 import qualified Sound.Tidal.Stream
 import qualified Sound.Tidal.Tempo as T
 import qualified Data.Map as Map_
--- import P5hs
---
+import P5hs
 
 -- used for sending custom calls to superdirt functions on a specific OSC path
 :{
-superdirtTargetOSC :: OSC
-superdirtTargetOSC = OSC "/scMessage" $ Named {required = []}
+superdirtMessageOSC :: OSC
+superdirtMessageOSC = OSC "/scMessage" $ Named {required = ["scMessage"]}
 :}
 
 
 -- almost-copy of startTidal, just with a path change
-:{
-startSCMessage :: Target -> Config -> IO Stream
-startSCMessage target config = startStream config [(target, [superdirtTargetOSC])]
-:}
+-- :{
+-- startSCMessage :: Target -> Config -> IO Stream
+-- startSCMessage target config = startStream config [(target, [superdirtTargetOSC])]
+-- :}
 
 
 
 :{
-let p5jsTarget :: Target
-    p5jsTarget = superdirtTarget {oName = "processing",
-                                  oAddress = "127.0.0.1", oPort = 57110,
-                                  oLatency = 0.1
-                                }
+let p5Target :: Target
+    p5Target = superdirtTarget {oName = "processing",oAddress = "192.168.1.128", oPort = 57130}
+    p5OSC = OSC "/p5" $ Named {required = []}
 :}
 
 :{
 let scMessageTarget :: Target
-    scMessageTarget = superdirtTarget {oName = "scMessage",oAddress = "127.0.0.1", oPort = 57120} 
+    scMessageTarget = Target {oName = "SuperDirt",
+                          oAddress = "127.0.0.1",
+                          oPort = 57120,
+                          oLatency = 0.2,
+                          oWindow = Nothing,
+                          oSchedule = Pre BundleStamp
+                         }
 :}
-
-
-
 
 import Data.List
 
 :{
-tidal <- startTidal (superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120})
-                        (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+tidalTarget = superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120}
 :}
 
 :{
-scMessage <- startSCMessage scMessageTarget (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+tidal <- startStream (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611}) 
+          [(tidalTarget,[superdirtShape,superdirtMessageOSC]),(p5Target,[p5OSC])]
 :}
+
+-- :{
+-- scMessage <- startSCMessage scMessageTarget (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+-- scMessage <- startStream defaultConfig [(scMessageTarget, [superdirtTargetOSC])]
+-- :}
+
+-- :{
+-- p5 <- startTidal p5Target (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611})
+-- :}
 
 :{
 glslViewerTarget :: Target
@@ -73,6 +82,29 @@ glslViewerTarget = superdirtTarget {oName = "glslViewer",
 --glslViewer <- startMulti [glslViewerTarget] (defaultConfig {cFrameTimespan = 1/20 , cCtrlPort = 6011, cTempoPort = 9611})
 :}
 
+:{
+let changeFunc' stream list = sendFunc' list
+      where toEvent' ws we ps pe v = Event (Sound.Tidal.Context.Context []) (Just $ Sound.Tidal.Context.Arc ws we) (Sound.Tidal.Context.Arc ps pe) v
+              -- where [ws',we',ps',pe'] = map toRational [ws,we,ps,pe]
+            makeFakeMap list_ = Map_.fromList list_
+            makeFuncHelp :: [(String,Value)] -> ControlPattern
+            makeFuncHelp y = Pattern $ fakeEvent (makeFakeMap y:: ControlMap)
+              where fakeEvent a notARealArgument = [(toEvent' 0 1 0 1) a]
+            makeFunc :: [(String,Value)] -> [ControlPattern]
+            makeFunc x = [makeFuncHelp x]
+            sendFunc' = mapM_ (streamFirst stream) . makeFunc
+    changeFunc stream func newFunction = changeFunc' stream list
+      where list = [(func, VS (render newFunction))]
+    resetFunc stream func = changeFunc stream func (makeJSVar "")
+    makeDraw stream newFunction = changeFunc stream "draw" newFunction
+    makeLoad stream newFunction = changeFunc stream "load" newFunction
+      -- where list = [("scMessage",VS "loadSoundFiles"),("filePath",VS path)]
+:}
+
+:{
+let draw = makeDraw tidal
+    load = makeLoad tidal
+:}
 
 
 
@@ -176,56 +208,16 @@ let changeFunc' stream list = sendFunc' list
 
 :{
 -- functions for sending paths to load into superDirt
-let loadSoundFiles path = loadSoundFiles' scMessage path 
-    loadSynthDefs path = loadSynthDefs' scMessage path
-    loadOnly path = loadOnly' scMessage path
-    loadSoundFileFolder path = loadSoundFileFolder' scMessage path 
-    loadSoundFile path = loadSoundFile' scMessage path
-    freeAllSoundFiles = freeAllSoundFiles' scMessage
-    freeSoundFiles name = freeSoundFiles' scMessage name
-    postSampleInfo = postSampleInfo' scMessage
-    initFreqSynthWindow = initFreqSynthWindow' scMessage
+let loadSoundFiles path = loadSoundFiles' tidal path 
+    loadSynthDefs path = loadSynthDefs' tidal path
+    loadOnly path = loadOnly' tidal path
+    loadSoundFileFolder path = loadSoundFileFolder' tidal path 
+    loadSoundFile path = loadSoundFile' tidal path
+    freeAllSoundFiles = freeAllSoundFiles' tidal 
+    freeSoundFiles name = freeSoundFiles' tidal name
+    postSampleInfo = postSampleInfo' tidal
+    initFreqSynthWindow = initFreqSynthWindow' tidal
 :}
-
-:{
---let g = streamReplace glslViewer
---    hushGlsl = streamHush glslViewer
-:}
-
-
--- -- for use with P5hs
--- :{
--- let changeFunc stream func newFunction = changeFunc' stream list
---       where list = [(func, VS (render newFunction))]
---             resetFunc stream func = changeFunc stream func (makeJSVar "")
---     -- 
---     makeDraw stream newFunction = changeFunc stream "draw" newFunction
---     -- 
---     makeImageUrlLoader stream imageURL = do
---       changeFunc' stream list
---       return $ makeJSVar (removePunc imageURL)
---         where varName = removePunc imageURL
---               imageURLVar = makeJSVar imageURL
---               list = [("imageName",VS varName),("imageURL",VS imageURL)]
---               -- the imageName is just the imageURL without any punctuation marks
---               -- this was done so that you could refer to the image with only one variable
---               --    the addition of a name is only for having a key:data pair that can be stored in an object
---     -- 
---     makeShader stream (shaderName, shaderVert, shaderFrag) = do
---       changeFunc' stream list
---       return $ makeJSVar shaderName
---         where list = [("shaderName",VS shaderName),("shaderVert",VS shaderVert),("shaderFrag",VS shaderFrag)]
--- :}
-
-
--- :{
--- let draw = makeDraw tidal
---     loadImage = makeShader tidal
---     loadShader = makeShader tidal
---     reset function = function (pack (makeJSVar ""))
-     -- ^^^ this function is used to reset the values of P5hs functions
-    --  ie. 'reset draw' would erase the draw function
--- :}
 
 :{
 let (&) = (|*|)
@@ -375,6 +367,7 @@ let (&) = (|*|)
     chordList =["6by9","'7f10","'7f5","'7f9","'7s5","'7s5f9","'7sus2","'7sus4","'9s5","'9sus4","'aug","'dim","'dim7","'dom7","'eleven","'elevenSharp","'five","'m11","'m11s","'m11sharp","'m13m6","'m6by9","'m7f5","'m7f9","'m7flat5","'m7flat9","'m7s5","'m7s9","'m7sharp5","'m7sharp5flat9","'m7sharp9","'m9","'m9s5","'m9sharp5","'maj","'maj11","'maj7", "maj9","'major","'major7","'min","'min7","'minor","'minor7","'msharp5","'nine","'nineSharp5","'nineSus4","'ninesus4","'one","'plus","'sevenFlat10","'sevenFlat5","'sevenFlat9","'sevenSharp5","'sevenSharp5flat9","'sevenSus2","'sevenSus4","'sharp5","'six","'sixby9","'sus2","'sus4","'thirteen"]
     fx cond pat = when cond (# gain 1) $ pat # gain 0
 :}
+
 
 
 :set prompt "tidal> "

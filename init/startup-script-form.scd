@@ -20,6 +20,10 @@ s.waitForBoot {
 	//~dirt.start(57120,outBusses: [0,1,2,3,4,5,6]);   // start listening on port 57120, create two busses each sending audio to channel 0
 	~dirt.start(57120,outBusses: [0,0,2,2,4,4,6,6,8,8]);   // start listening on port 57120, create two busses each sending audio to channel 0
 
+	~midiOut = MIDIOut.newByName("Virtual Raw MIDI 3-0", "VirMIDI 3-0");
+
+	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
+
 //	SynthDef(\sy1, {|out=0, freq=440| Out.ar(out, DC.ar(0)) }).add;
 //	SynthDef(\sy2, {|out=0, freq=440| Out.ar(out, DC.ar(0)) }).add;
 //	SynthDef(\sy3, {|out=0, freq=440| Out.ar(out, DC.ar(0)) }).add;
@@ -49,26 +53,26 @@ s.waitForBoot {
 
 // Evaluate the block below to start the mapping MIDI -> OSC.
 
-(
-osc = NetAddr.new("127.0.0.1", 6010);
-
 MIDIClient.init;
-MIDIIn.connectAll;
+/*
+(
 
-on = MIDIFunc.noteOn({ |val, num, chan, src|
+//MIDIIn.connectAll;
+
+on = MIDIFunc.noteOn({ |val, num, chan, src| 
 
 osc.sendMsg("/ctrl", "n", num); // if I remember correctly this was the bit I changed to get notes in!
 
 });
 
 off = MIDIFunc.noteOff({ |val, num, chan, src|
-osc.sendMsg("/ctrl", "n", 0);
+osc.sendMsg("/ctrl", "n", 0); 
 });
 
 cc = MIDIFunc.cc({ |val, num, chan, src|
-osc.sendMsg("/ctrl", num.asString, val/127);
+osc.sendMsg("/ctrl", num.asString, val/127); 
 
-});
+}); 
 
 if (~stopMidiToOsc != nil, {
 ~stopMidiToOsc.value;
@@ -80,6 +84,9 @@ off.free;
 cc.free;
 };
 );
+
+*/
+
 
 
 s.latency = 0.3; //increase this if you get "late" messages
