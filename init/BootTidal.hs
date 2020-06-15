@@ -97,6 +97,7 @@ let changeFunc' stream list = sendFunc' list
       where list = [(func, VS (render newFunction))]
     resetFunc stream func = changeFunc stream func (makeJSVar "")
     makeDraw stream newFunction = changeFunc stream "draw" newFunction
+    makeSetup stream newFunction = changeFunc stream "setup" newFunction
     makeLoad stream newFunction = changeFunc stream "load" newFunction
       -- where list = [("scMessage",VS "loadSoundFiles"),("filePath",VS path)]
 :}
@@ -104,6 +105,7 @@ let changeFunc' stream list = sendFunc' list
 :{
 let draw = makeDraw tidal
     load = makeLoad tidal
+    setup = makeSetup tidal
 :}
 
 
@@ -121,7 +123,7 @@ let p = streamReplace tidal
     once = streamOnce tidal
     asap = once
     nudgeAll = streamNudgeAll tidal
-    neall = streamAll tidal
+    all = streamAll tidal
     resetCycles = streamResetCycles tidal
     setcps = asap . cps
     xfade i = transition tidal True (Sound.Tidal.Transition.xfadeIn 4) i

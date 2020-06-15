@@ -182,13 +182,17 @@ makeDraw stream newFunction = changeFunc stream "draw" newFunction
 --
 makeLoad stream newFunction = changeFunc stream "load" newFunction
 --
+makeSetup stream newFunction = changeFunc stream "setup" newFunction
+--
 makeImageUrlLoader stream imageURL = do
   changeFunc' stream list
   return $ makeJSVar (removePunc imageURL)
     where varName = removePunc imageURL
           imageURLVar = makeJSVar imageURL
           list = [("imageName",VS varName),("imageURL",VS imageURL)]
+
 draw = makeDraw tidal
+setup = makeSetup tidal
 -- loadImage = makeShader tidal
 -- loadShader = makeShader tidal
 createImg = makeImageUrlLoader tidal
