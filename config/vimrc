@@ -142,8 +142,12 @@ execute 'nnoremap <buffer> <m-&> :TidalSilence 7 <cr>'
 execute 'nnoremap <buffer> <m-*> :TidalSilence 8 <cr>'
 execute 'nnoremap <buffer> <m-(> :TidalSilence 9 <cr>'
 
+
 "" resets any effects applied globally
 execute 'nnoremap <buffer> <m-)> :TidalSend1 all $ id <cr>'
+
+execute 'nnoremap <buffer> <C-s> :TidalSend1 p "midictl" $ midicmd "stop" # s "midi" <cr>'
+execute 'nnoremap <buffer> <C-m-S> :TidalSend1 p "midictl" $ midicmd "start" # s "midi" <cr>'
 
 "" leading to..
 
