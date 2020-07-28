@@ -20,7 +20,9 @@ s.waitForBoot {
 	//~dirt.start(57120,outBusses: [0,1,2,3,4,5,6]);   // start listening on port 57120, create two busses each sending audio to channel 0
 	~dirt.start(57120,outBusses: [0,0,2,2,4,4,6,6,8,8]);   // start listening on port 57120, create two busses each sending audio to channel 0
 
-	~midiOut = MIDIOut.newByName("Virtual Raw MIDI 3-0", "VirMIDI 3-0");
+	/* ~midiOut = MIDIOut.newByName("Virtual Raw MIDI 3-0", "VirMIDI 3-0"); */
+	// figure out why it changes
+	~midiOut = MIDIOut.newByName("Virtual Raw MIDI 2-0", "VirMIDI 2-0");
 
 	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 

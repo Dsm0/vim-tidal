@@ -1,10 +1,6 @@
-import Sound.Tidal.Context
 import Data.List
-import P5hs
-import P5FunctionSend
 
 :{
-
 let (&) = (|*|)
     lofi = (crush 5.5 # shape 0.8 # lpf 700 # bandf 500 # bpq 0.4)
     ripOLD a b p = within (0.25, 0.75) (slow 2 . rev . stut 8 a b) p
@@ -90,20 +86,16 @@ let (&) = (|*|)
     phoffs = ctlNum 23
     phoffr = ctlNum 24
     uni = ctlNum 25
-    g = gtfo
-    del = gtfo
     -- slice pi pn p = begin b # end e # p
     -- where b = (\i n -> (div' i n)) <$> pi <*> pn
     -- e = (\i n -> (div' i n) + (div' 1 n)) <$> pi <*> pn
     -- div' a b = fromIntegral (a `mod` b) / fromIntegral b
-    r = run
     ri a = rev (r a) -- run inverted
     rodd a = (((r a) + 1) * 2) - 1 -- run of odd numbers
     reven a = ((r a) + 1) * 2 -- run of even numbers
     roddi a = rev (rodd a) -- run of odd numbers inverted
     reveni a = rev (reven a) -- run of even numbers inverted
     eveni = reveni
-    c = choose
     codd a = c $ take a [1,3..] -- choose an odd number
     ceven a = c $ take a [0,2..] -- choose an even number
     thicken' x percent p = superimpose ((# pan 1) . (|* speed percent)) $ ((# speed x) . (# pan 0)) $ p
@@ -128,6 +120,10 @@ let (&) = (|*|)
                 ("stripe", stripe 2),
                 ("basser", off "0.125 0.25" ((# up "-12").(# sus 0.1)).(# cut 3)),
                 ("pat1", (struct "t t [f t] [f f t f]")),
+                ("1st", (mask "t f f f")),
+                ("2ndBeat", (mask "f t f f")),
+                ("3rdBeat", (mask "f f t f")),
+                ("4thBeat", (mask "f f f t")),
                 ("pat2", (struct "[t f t t f]"))]
     parse' = parseBP_E . show
     urLines' x = bracks $ intercalate " , " $ map bracks $ lines x
@@ -136,9 +132,6 @@ let (&) = (|*|)
       where bracks = (\x -> "[" ++ x ++ "]")
     urList a b c d = ur a (parseBP_E $ urList' b) c d
     urLines a b c d = ur a (parseBP_E $ urLines' b) c d
-    e = every
-    wm = whenmod
-    shiftBy x = (x ~>)
     fli = (fast 2 . linger 0.5)
     rand' x = shiftBy x $ rand
     yUp y x = (((y + x)/ y))
@@ -146,62 +139,9 @@ let (&) = (|*|)
     nUy y x = up (((y + x)/ y))
     -- frange x y = s((# hpf x) . (# lpf y))
     chordList =["6by9","'7f10","'7f5","'7f9","'7s5","'7s5f9","'7sus2","'7sus4","'9s5","'9sus4","'aug","'dim","'dim7","'dom7","'eleven","'elevenSharp","'five","'m11","'m11s","'m11sharp","'m13m6","'m6by9","'m7f5","'m7f9","'m7flat5","'m7flat9","'m7s5","'m7s9","'m7sharp5","'m7sharp5flat9","'m7sharp9","'m9","'m9s5","'m9sharp5","'maj","'maj11","'maj7", "maj9","'major","'major7","'min","'min7","'minor","'minor7","'msharp5","'nine","'nineSharp5","'nineSus4","'ninesus4","'one","'plus","'sevenFlat10","'sevenFlat5","'sevenFlat9","'sevenSharp5","'sevenSharp5flat9","'sevenSus2","'sevenSus4","'sharp5","'six","'sixby9","'sus2","'sus4","'thirteen"]
-
+    fx cond pat = when cond (# gain 1) $ pat # gain 0
 :}
 
-
-:{
-
-let dirtSounds = "~/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/*"
-    mntPt x = "/media/ick/5EB068D0139EDA18/" ++ x
-
-:}
-
-:{
-
-:{
-
--- for use with P5hs
-changeFunc' stream list = sendFunc' list
-  where toEvent' ws we ps pe v = Event (Sound.Tidal.Context.Context []) (Just $ Sound.Tidal.Context.Arc ws we) (Sound.Tidal.Context.Arc ps pe) v
-          -- where [ws',we',ps',pe'] = map toRational [ws,we,ps,pe]
-        makeFakeMap list_ = Map_.fromList list_
-        makeFuncHelp :: [(JavaScript,Value)] -> ControlPattern
-        makeFuncHelp y = Pattern $ fakeEvent (makeFakeMap y:: ControlMap)
-          where fakeEvent a notARealArgument = [(toEvent' 0 1 0 1) a]
-        makeFunc :: [(JavaScript,Value)] -> [ControlPattern]
-        makeFunc x = [makeFuncHelp x]
-        sendFunc' = mapM_ (streamFirst stream) . makeFunc
---
-changeFunc stream func newFunction = changeFunc' stream list
-  where list = [(func, VS (render newFunction))]
---
-resetFunc stream func = changeFunc stream func (makeJSVar "")
---
-makeDraw stream newFunction = changeFunc stream "draw" newFunction
---
-makeLoad stream newFunction = changeFunc stream "load" newFunction
---
-makeSetup stream newFunction = changeFunc stream "setup" newFunction
---
-makeImageUrlLoader stream imageURL = do
-  changeFunc' stream list
-  return $ makeJSVar (removePunc imageURL)
-    where varName = removePunc imageURL
-          imageURLVar = makeJSVar imageURL
-          list = [("imageName",VS varName),("imageURL",VS imageURL)]
-
-draw = makeDraw tidal
-setup = makeSetup tidal
--- loadImage = makeShader tidal
--- loadShader = makeShader tidal
-createImg = makeImageUrlLoader tidal
-reset function = function (pack (makeJSVar ""))
--- ^^^ this function is used to reset the values of P5hs functions
---ie. 'reset draw' would erase the draw function
-makeValue a = ArgEx a (show a)
-
-:}
 
 
 
