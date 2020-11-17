@@ -58,6 +58,8 @@ autocmd FileType tidal setlocal commentstring=--\ %s
 map <C-_> <Plug>Commentary
 
 
+
+
 augroup FastEscape
     autocmd!
     au InsertEnter * set timeoutlen=0
@@ -128,20 +130,21 @@ while i <= 9
   let i += 1
 endwhile
 
+
 "" think of the following mappings as alt+Shift+1
 ""				      alt+Shift+2
 ""				      etc...
 "" these mappings will silence streams 1-9
 
-execute 'nnoremap <buffer> <m-!> :TidalSilence 1 <cr>'
-execute 'nnoremap <buffer> <m-@> :TidalSilence 2 <cr>'
-execute 'nnoremap <buffer> <m-#> :TidalSilence 3 <cr>'
-execute 'nnoremap <buffer> <m-$> :TidalSilence 4 <cr>'
-execute 'nnoremap <buffer> <m-%> :TidalSilence 5 <cr>'
-execute 'nnoremap <buffer> <m-^> :TidalSilence 6 <cr>'
-execute 'nnoremap <buffer> <m-&> :TidalSilence 7 <cr>'
-execute 'nnoremap <buffer> <m-*> :TidalSilence 8 <cr>'
-execute 'nnoremap <buffer> <m-(> :TidalSilence 9 <cr>'
+execute 'nnoremap <buffer> <m-!> :TidalPlayBackwards1 <cr>'
+execute 'nnoremap <buffer> <m-@> :TidalPlayBackwards2 <cr>'
+execute 'nnoremap <buffer> <m-#> :TidalPlayBackwards3 <cr>'
+execute 'nnoremap <buffer> <m-$> :TidalPlayBackwards4 <cr>'
+execute 'nnoremap <buffer> <m-%> :TidalPlayBackwards5 <cr>'
+execute 'nnoremap <buffer> <m-^> :TidalPlayBackwards6 <cr>'
+execute 'nnoremap <buffer> <m-&> :TidalPlayBackwards7 <cr>'
+execute 'nnoremap <buffer> <m-*> :TidalPlayBackwards8 <cr>'
+execute 'nnoremap <buffer> <m-(> :TidalPlayBackwards9 <cr>'
 
 
 "" resets any effects applied globally

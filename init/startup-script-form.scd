@@ -7,8 +7,8 @@ var osc;
 s.options.numBuffers = 1024 * 256; // increase this if you need to load more samples
 s.options.memSize = 8192 * 32; // increase this if you get "alloc failed" messages
 s.options.maxNodes = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
-s.options.numOutputBusChannels = 8; // set this to your hardware output channel size, if necessary
-s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
+s.options.numOutputBusChannels = 16; // set this to your hardware output channel size, if necessary
+s.options.numInputBusChannels = 16; // set this to your hardware output channel size, if necessary
 // boot the server and start SuperDirt
 s.waitForBoot {
 	~dirt = SuperDirt(2, s); // twelve output channels, increase if you want to pan across more channels
@@ -18,11 +18,13 @@ s.waitForBoot {
     //
     //
 	//~dirt.start(57120,outBusses: [0,1,2,3,4,5,6]);   // start listening on port 57120, create two busses each sending audio to channel 0
-	~dirt.start(57120,outBusses: [0,0,2,2,4,4,6,6,8,8]);   // start listening on port 57120, create two busses each sending audio to channel 0
+	~dirt.start(57120,outBusses: [0,0,2,2,4,4,6,6,8,8,10,11,12,13,14,15,16]);   // start listening on port 57120, create two busses each sending audio to channel 0
+							// 10-16 are for use with effects routing
 
-	/* ~midiOut = MIDIOut.newByName("Virtual Raw MIDI 3-0", "VirMIDI 3-0"); */
+	/* ~midiOut = MIDIOut.newByName("Virtual Raw MIDI 2-0", "VirMIDI 2-0"); */
+	~midiOut = MIDIOut.newByName("Virtual Raw MIDI 3-0", "VirMIDI 3-0");
+	/* ~midiOut = MIDIOut.newByName("Virtual Raw MIDI 4-0", "VirMIDI 4-0"); */
 	// figure out why it changes
-	~midiOut = MIDIOut.newByName("Virtual Raw MIDI 2-0", "VirMIDI 2-0");
 
 	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 

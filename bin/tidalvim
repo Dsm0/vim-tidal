@@ -33,7 +33,8 @@ BOOT_SUPERCOLLIDER="env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG 
 
 # Check if tmux session "tidal" is running, attach only
 # else, create new session, split windows and run processes
-$TMUX -f -2 attach-session -t $SESSION || $TMUX -2 \
+$TMUX -2 attach-session -t $SESSION ||
+  $TMUX -f $TMUX_CONF -2 \
   set -s escape-time 0 \; \
   set -g mouse on \; \
   new-session -s $SESSION -n $MAIN_WINDOW  \; \

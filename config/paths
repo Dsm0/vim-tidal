@@ -10,7 +10,9 @@
 # VIMRUNTIME=${VIMRUNTIME:-"$DIR/../runtime"}
 VIMTIDALROOT=${VIMTIDALROOT:-"$DIR/.."}
 VIMRC=${VIMRC:-"$DIR/../config/vimrc"}
+
 TMUX=${TMUX:-"tmux"}
+TMUX_CONF=${TMUX_CONF:-"$DIR/../config/tmux.conf"}
 
 
 # AUTOLOADDIR=${PACKAGEDIR:-"$VIMRUNTIME/autoload"}

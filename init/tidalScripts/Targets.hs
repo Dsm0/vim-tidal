@@ -37,8 +37,19 @@ tidalTarget = superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 5
 :}
 
 :{
+let osc2whTarget = superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.2", oPort = 9000}
+    osc2whOSC = OSC "/osc2wh" $ Named {required = []}
+:}
+
+:{
 tidal <- startStream (defaultConfig {cFrameTimespan = 1/20 , cTempoPort = 9611}) 
-          [(tidalTarget,[superdirtShape,superdirtMessageOSC]),(p5Target,[p5OSC])]
+          [
+          (tidalTarget,[superdirtShape,superdirtMessageOSC])
+          -- ,
+          -- (p5Target,[superdirtShape])
+          -- ,
+          -- (osc2whTarget,[osc2whOSC])
+          ]
 :}
 
 -- :{
