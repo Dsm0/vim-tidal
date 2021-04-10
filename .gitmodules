@@ -1,6 +1,3 @@
-[submodule "Orca-c"]
-	path = Orca-c
-	url = https://github.com/hundredrabbits/Orca-c.git
 [submodule "auto-pairs"]
 	path = auto-pairs
 	url = https://github.com/jiangmiao/auto-pairs
