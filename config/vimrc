@@ -104,25 +104,49 @@ let NERDTreeShowBookmarks=1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Tidal mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function BindTidalEffect(effect, binding, prefix)
-  let l:effectString= a:prefix." ".a:effect." (8/8) <esc>4hr"
-  let l:effectStringParen="(".a:prefix." ".a:effect." (8/8)) <esc>5hr"
+function BindTidalEffect(effect, binding, prefix, ...)
+  let l:value= a:0>=1 ? a:1 : "(8/8)"
+  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F/hr"
+  let l:effectStringParen="(".a:prefix." ".a:effect." ".value." <esc>F/hr"
   exec "nmap <space>".a:binding." a".effectString
   exec "nmap <space><space>".a:binding." a".effectStringParen
 endfunction
 
 "" basic stuff
+call BindTidalEffect("speed","S","&")
 call BindTidalEffect("gain","G","&")
 call BindTidalEffect("pan","P","#")
 call BindTidalEffect("amp","A","#")
 
 "" envelope related
 call BindTidalEffect("att","ea","#")
-call BindTidalEffect("sus","es","#")
-call BindTidalEffect("decay","ed","#")
+call BindTidalEffect("hold","eh","#")
 call BindTidalEffect("rel","er","#")
+""" considering this chief to the contour of the sound
+call BindTidalEffect("sus","es","#")
 
-"" 
+"" filters
+call BindTidalEffect("lpf","fl","#","(2000*(8/8))")
+call BindTidalEffect("lresonance","flr","#")
+call BindTidalEffect("lpq","flq","#")
+
+call BindTidalEffect("hpf","fh","#","(2000*(8/8))")
+call BindTidalEffect("hresonance","fhr","#")
+call BindTidalEffect("hpq","fhq","#")
+
+call BindTidalEffect("bpf","fh","#","(2000*(8/8))")
+call BindTidalEffect("bpfq","fhq","#")
+
+
+"" delay/verb
+call BindTidalEffect("delay","d","#")
+call BindTidalEffect("room","r","#")
+
+"" distortions
+call BindTidalEffect("shape","s","#")
+call BindTidalEffect("distort","d","#")
+call BindTidalEffect("crush","c","#")
+call BindTidalEffect("coarse","co","#")
 
 
 
