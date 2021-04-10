@@ -238,6 +238,9 @@ execute 'nnoremap <buffer> <m-&> :TidalPlayBackwards7 <cr>'
 execute 'nnoremap <buffer> <m-*> :TidalPlayBackwards8 <cr>'
 execute 'nnoremap <buffer> <m-(> :TidalPlayBackwards9 <cr>'
 
+"" resets the cycle counter
+execute 'nnoremap <buffer> <m-r> :TidalSend1 resetCycles <cr>'
+
 "" resets any effects applied globally
 execute 'nnoremap <buffer> <m-)> :TidalSend1 all $ id <cr>'
 
