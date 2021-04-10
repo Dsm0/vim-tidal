@@ -40,20 +40,11 @@ $TMUX -2 attach-session -t $SESSION ||
   new-session -s $SESSION -n $MAIN_WINDOW  \; \
   new-window -n $BACKGROUND_WINDOW     \; \
   select-window -t $BACKGROUND_WINDOW \; \
-  split-window -h -t $BACKGROUND_WINDOW \; \
-  split-window -v -t $BACKGROUND_WINDOW \; \
-  split-window -v -t $BACKGROUND_WINDOW \; \
-  select-layout main-vertical  \; \
-  send-keys -t 0 "$BOOT_P5JS_DIRT" C-m  \; \
-  send-keys -t 1 "$BOOT_JACK" C-m  \; \
-  send-keys -t 2 "$VIM $TIDAL_BOOT_PATH" C-m  \; \
-  send-keys -t 3 "$VIM $SUPERDIRT_BOOT_PATH" C-m  \; \
+  send-keys -t 0 "$BOOT_JACK" C-m  \; \
   select-window -t $MAIN_WINDOW \; \
   split-window -v -t $SESSION   \; \
-  split-window -h -t $SESSION   \; \
   send-keys -t $VIMPANE "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH $VIM $args" C-m   \; \
   send-keys -t $TIDALPANE "env TIDAL_BOOT_PATH=$TIDAL_BOOT_PATH GHCI=$GHCI boot-vim-tidal" C-m   \; \
-  send-keys -t $SUPERDIRTPANE "env SUPERDIRT_BOOT_PATH=$SUPERDIRT_BOOT_PATH SCLANG=$SCLANG boot-superDirt" C-m   \; \
   select-pane -t $VIMPANE \; \
   bind n next-window \; \
   bind p previous-window \; \
