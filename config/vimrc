@@ -115,6 +115,14 @@ function BindTidalEffect(effect, binding, prefix, ...)
 endfunction
 
 
+function BindTidalObject(object, binding, prefix, ...)
+  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F(l".postCommand
+  let l:effectStringParen="(".a:effect." ".value." <esc>F(l".postCommand
+  exec "nmap <space>h".a:binding." a".effectString
+  exec "nmap <space><space>h".a:binding." a".effectStringParen
+endfunction
+
+
 """" audio effects
 
 "" basic stuff
@@ -165,6 +173,7 @@ call BindTidalEffect("triode","dt","#")
 call BindTidalEffect("waveloss","dw","#")
 
 call BindTidalEffect("binshift","db","#")
+call BindTidalEffect("binshift","db","#")
 
 "" modulators
 call BindTidalEffect("leslie","le","#")
@@ -172,6 +181,9 @@ call BindTidalEffect("lrate","lr","#")
 call BindTidalEffect("lsize","ls","#")
 
 call BindTidalEffect("tremolo","lt","#")
+
+
+"" objects
 
 """" Pattern functions
 
@@ -183,7 +195,9 @@ call BindTidalEffect("slow","s","","(1) $")
 call BindTidalEffect("linger","l","","(8/8) $")
 
 
+"""""""" Manuvering
 
+nmap <silent> L :call search("\$",'b')<CR>
 
 
 let tidal_no_mappings = 1
@@ -204,7 +218,6 @@ nmap <m-h> :TidalHush <Return>
 
 let g:tidal_preserve_curpos = 1
 
-
 "" for alt+ any number key, (ie. alt+1, alt+2, etc...)
 "" it will evaluate the first d1, d2, etc... it can find that is below your cursor
 let i = 1
@@ -212,12 +225,6 @@ while i <= 9
   execute 'nnoremap <buffer> <m-'.i.'> :TidalPlay'.i.'<cr>'
   let i += 1
 endwhile
-
-
-"" think of the following mappings as alt+Shift+1
-""				      alt+Shift+2
-""				      etc...
-"" these mappings will silence streams 1-9
 
 execute 'nnoremap <buffer> <m-!> :TidalPlayBackwards1 <cr>'
 execute 'nnoremap <buffer> <m-@> :TidalPlayBackwards2 <cr>'
@@ -228,7 +235,6 @@ execute 'nnoremap <buffer> <m-^> :TidalPlayBackwards6 <cr>'
 execute 'nnoremap <buffer> <m-&> :TidalPlayBackwards7 <cr>'
 execute 'nnoremap <buffer> <m-*> :TidalPlayBackwards8 <cr>'
 execute 'nnoremap <buffer> <m-(> :TidalPlayBackwards9 <cr>'
-
 
 "" resets any effects applied globally
 execute 'nnoremap <buffer> <m-)> :TidalSend1 all $ id <cr>'
