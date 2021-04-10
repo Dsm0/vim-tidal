@@ -107,8 +107,9 @@ let NERDTreeShowBookmarks=1
 
 function BindTidalEffect(effect, binding, prefix, ...)
   let l:value= a:0>=1 ? a:1 : "(8/8)"
-  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F(lr"
-  let l:effectStringParen="(".a:prefix." ".a:effect." ".value." <esc>F(lr"
+  let l:postCommand = a:0>=2 ? a:2 : "r"
+  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F(l".postCommand
+  let l:effectStringParen="(".a:prefix." ".a:effect." ".value." <esc>F(l".postCommand
   exec "nmap <space>".a:binding." a".effectString
   exec "nmap <space><space>".a:binding." a".effectStringParen
 endfunction
@@ -155,10 +156,8 @@ call BindTidalEffect("binshift","db","#")
 call BindTidalEffect("fast","f","","(1) $")
 call BindTidalEffect("slow","s","","(1) $")
 
-
 "" LINGER
 call BindTidalEffect("linger","l","","(8/8) $")
-
 
 
 
