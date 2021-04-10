@@ -197,7 +197,10 @@ call BindTidalEffect("linger","l","","(8/8) $")
 
 """""""" Manuvering
 
-nmap <silent> L :call search("\$",'b')<CR>
+let searchstring="[\\$\|\\#\|&]"
+
+nmap <silent> H :call search(searchstring,'b')<CR>
+nmap <silent> L :call search(searchstring)<CR>
 
 
 let tidal_no_mappings = 1
