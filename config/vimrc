@@ -104,13 +104,15 @@ let NERDTreeShowBookmarks=1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Tidal mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 function BindTidalEffect(effect, binding, prefix, ...)
   let l:value= a:0>=1 ? a:1 : "(8/8)"
-  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F/hr"
-  let l:effectStringParen="(".a:prefix." ".a:effect." ".value." <esc>F/hr"
+  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F(lr"
+  let l:effectStringParen="(".a:prefix." ".a:effect." ".value." <esc>F(lr"
   exec "nmap <space>".a:binding." a".effectString
   exec "nmap <space><space>".a:binding." a".effectStringParen
 endfunction
+
 
 "" basic stuff
 call BindTidalEffect("speed","S","&")
@@ -137,16 +139,25 @@ call BindTidalEffect("hpq","fhq","#")
 call BindTidalEffect("bpf","fh","#","(2000*(8/8))")
 call BindTidalEffect("bpfq","fhq","#")
 
-
 "" delay/verb
 call BindTidalEffect("delay","d","#")
 call BindTidalEffect("room","r","#")
 
 "" distortions
-call BindTidalEffect("shape","s","#")
-call BindTidalEffect("distort","d","#")
-call BindTidalEffect("crush","c","#")
-call BindTidalEffect("coarse","co","#")
+call BindTidalEffect("shape","ds","#")
+call BindTidalEffect("distort","dd","#")
+call BindTidalEffect("crush","dc","#")
+call BindTidalEffect("coarse","do","#")
+call BindTidalEffect("krush","dk","#")
+call BindTidalEffect("binshift","db","#")
+
+"" fast/slow                    \/      \/ ez way to reorder funcs
+call BindTidalEffect("fast","f","","(1) $")
+call BindTidalEffect("slow","s","","(1) $")
+
+
+"" LINGER
+call BindTidalEffect("linger","l","","(8/8) $")
 
 
 
