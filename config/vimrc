@@ -42,6 +42,7 @@ call plug#begin(expand($PACKAGEDIR))
     Plug 'jiangmiao/auto-pairs'
     Plug 'supercollider/scvim'
     Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-surround'
     Plug 'preservim/nerdtree'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " if has('nvim')
