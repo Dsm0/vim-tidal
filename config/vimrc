@@ -115,6 +115,8 @@ function BindTidalEffect(effect, binding, prefix, ...)
 endfunction
 
 
+"""" audio effects
+
 "" basic stuff
 call BindTidalEffect("speed","S","&")
 call BindTidalEffect("gain","G","&")
@@ -140,9 +142,18 @@ call BindTidalEffect("hpq","fhq","#")
 call BindTidalEffect("bpf","fh","#","(2000*(8/8))")
 call BindTidalEffect("bpfq","fhq","#")
 
+call BindTidalEffect("djf","fd","#","(2000*(8/8))")
+
+call BindTidalEffect("vowel","fv","#",'("")',"aa<esc>r")
+
 "" delay/verb
-call BindTidalEffect("delay","d","#")
+call BindTidalEffect("delay","rd","#")
+call BindTidalEffect("delayt","rdt","#")
+call BindTidalEffect("delayfb","rdf","#")
+
 call BindTidalEffect("room","r","#")
+call BindTidalEffect("size","rs","#")
+call BindTidalEffect("size","rd","#")
 
 "" distortions
 call BindTidalEffect("shape","ds","#")
@@ -150,7 +161,19 @@ call BindTidalEffect("distort","dd","#")
 call BindTidalEffect("crush","dc","#")
 call BindTidalEffect("coarse","do","#")
 call BindTidalEffect("krush","dk","#")
+call BindTidalEffect("triode","dt","#")
+call BindTidalEffect("waveloss","dw","#")
+
 call BindTidalEffect("binshift","db","#")
+
+"" modulators
+call BindTidalEffect("leslie","le","#")
+call BindTidalEffect("lrate","lr","#")
+call BindTidalEffect("lsize","ls","#")
+
+call BindTidalEffect("tremolo","lt","#")
+
+"""" Pattern functions
 
 "" fast/slow                    \/      \/ ez way to reorder funcs
 call BindTidalEffect("fast","f","","(1) $")
