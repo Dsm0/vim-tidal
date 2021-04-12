@@ -224,28 +224,44 @@ let g:tidal_preserve_curpos = 1
 "" it will evaluate the first d1, d2, etc... it can find that is below your cursor
 let i = 1
 while i <= 9
-  execute 'nnoremap <buffer> <m-'.i.'> :TidalPlay'.i.'<cr>'
+  execute 'nnoremap <m-'.i.'> :TidalPlay'.i.'<cr>'
   let i += 1
 endwhile
 
-execute 'nnoremap <buffer> <m-!> :TidalPlayBackwards1 <cr>'
-execute 'nnoremap <buffer> <m-@> :TidalPlayBackwards2 <cr>'
-execute 'nnoremap <buffer> <m-#> :TidalPlayBackwards3 <cr>'
-execute 'nnoremap <buffer> <m-$> :TidalPlayBackwards4 <cr>'
-execute 'nnoremap <buffer> <m-%> :TidalPlayBackwards5 <cr>'
-execute 'nnoremap <buffer> <m-^> :TidalPlayBackwards6 <cr>'
-execute 'nnoremap <buffer> <m-&> :TidalPlayBackwards7 <cr>'
-execute 'nnoremap <buffer> <m-*> :TidalPlayBackwards8 <cr>'
-execute 'nnoremap <buffer> <m-(> :TidalPlayBackwards9 <cr>'
+
+function! s:TidalPlayBackwards(stream)
+  let res = search('d' . a:stream,"b")
+  let l:cursor_pos = getpos(".")
+  if res > 0
+    silent execute "normal! vip:TidalSend\<cr>"
+    silent execute "normal! vip"
+    call s:TidalFlashVisualSelection()
+  else
+    echo "d" . a:stream . " was not found"
+  endif
+  call setpos('.', cursor_pos)
+endfunction
+
+command! -nargs=1 TidalPlayBackwards call s:TidalPlayBackwards(<args>)
+
+execute 'nnoremap <m-!> :TidalPlayBackwards1 <cr>'
+execute 'nnoremap <m-@> :TidalPlayBackwards2 <cr>'
+execute 'nnoremap <m-#> :TidalPlayBackwards3 <cr>'
+execute 'nnoremap <m-$> :TidalPlayBackwards4 <cr>'
+execute 'nnoremap <m-%> :TidalPlayBackwards5 <cr>'
+execute 'nnoremap <m-^> :TidalPlayBackwards6 <cr>'
+execute 'nnoremap <m-&> :TidalPlayBackwards7 <cr>'
+execute 'nnoremap <m-*> :TidalPlayBackwards8 <cr>'
+execute 'nnoremap <m-(> :TidalPlayBackwards9 <cr>'
 
 "" resets the cycle counter
-execute 'nnoremap <buffer> <m-r> :TidalSend1 resetCycles <cr>'
+execute 'nnoremap <m-r> :TidalSend1 resetCycles <cr>'
 
 "" resets any effects applied globally
-execute 'nnoremap <buffer> <m-)> :TidalSend1 all $ id <cr>'
+execute 'nnoremap <m-)> :TidalSend1 all $ id <cr>'
 
-execute 'nnoremap <buffer> <C-s> :TidalSend1 p "midictl" $ midicmd "stop" # s "midi" <cr>'
-execute 'nnoremap <buffer> <C-m-S> :TidalSend1 p "midictl" $ midicmd "start" # s "midi" <cr>'
+execute 'nnoremap <C-s> :TidalSend1 p "midictl" $ midicmd "stop" # s "midi" <cr>'
+execute 'nnoremap <C-m-S> :TidalSend1 p "midictl" $ midicmd "start" # s "midi" <cr>'
 
 "" leading to..
 
