@@ -129,7 +129,7 @@ endfunction
 call BindTidalEffect("speed","S","&")
 call BindTidalEffect("gain","G","&")
 call BindTidalEffect("pan","P","#")
-call BindTidalEffect("amp","A","#")
+call BindTidalEffect("accelerate","A","#")
 
 "" envelope related
 call BindTidalEffect("att","ea","#")
@@ -183,7 +183,7 @@ call BindTidalEffect("lsize","ls","#")
 call BindTidalEffect("tremolo","lt","#")
 
 
-"" objects
+""" objects
 
 """" Pattern functions
 
@@ -191,8 +191,10 @@ call BindTidalEffect("tremolo","lt","#")
 call BindTidalEffect("fast","f","","(1) $")
 call BindTidalEffect("slow","s","","(1) $")
 
-"" LINGER
 call BindTidalEffect("linger","l","","(8/8) $")
+call BindTidalEffect("ply","p","","(1/1) $")
+call BindTidalEffect("iter","i","","(1/1) $")
+call BindTidalEffect("degradeBy","d","","(4/8) $")
 
 
 """""""" Manuvering
