@@ -49,8 +49,9 @@ call plug#end()
 autocmd FileType tidal setlocal commentstring=--\ %s
 map <C-_> <Plug>Commentary
 
+let tidalRoot = expand($VIMTIDALROOT)
 
-
+exec "set dictionary+=" . tidalRoot."/dict/samples_dict"
 
 augroup FastEscape
     autocmd!
