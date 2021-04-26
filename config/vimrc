@@ -222,12 +222,22 @@ let g:tidal_preserve_curpos = 1
 let i = 1
 while i <= 9
   execute 'nnoremap <m-'.i.'> :TidalPlay'.i.'<cr>'
+  execute 'nmap <space>'.i.' :TidalJumpPlay'.i.'<cr>'
   let i += 1
 endwhile
 
+function! s:TidalJumpPlay(stream)
+  silent execute "normal! `".a:stream
+  let l:cursor_pos = getpos(".")
+  silent execute "normal! vip:TidalSend\<cr>"
+  call setpos('.', cursor_pos)
+endfunction
+
+command! -nargs=1 TidalJumpPlay call s:TidalJumpPlay(<args>)
+
 
 function! s:TidalPlayBackwards(stream)
-  let res = search('d' . a:stream,"b")
+  let res = search('d' . stream,"b")
   let l:cursor_pos = getpos(".")
   if res > 0
     silent execute "normal! vip:TidalSend\<cr>"
