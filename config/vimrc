@@ -185,12 +185,13 @@ call BindTidalEffect("tremolo","lt","#")
 
 """ objects
 call BindTidalObject("sine","s","","")
+call BindTidalObject("square","q","","")
+call BindTidalObject("cosine","c","","")
 call BindTidalObject("tri","t","","")
 call BindTidalObject("saw","w","","")
 call BindTidalObject("rand","a","","")
 call BindTidalObject("irand 8","i","","")
-
-
+call BindTidalObject("envL","e","","")
 
 
 """" Pattern functions
@@ -199,12 +200,16 @@ call BindTidalObject("irand 8","i","","")
 call BindTidalEffect("fast","f","","(1) $")
 call BindTidalEffect("slow","s","","(1) $")
 
+call BindTidalEffect("discretize","D","","(8) $")
+call BindTidalEffect("trigger","T","","(1) $")
+
 call BindTidalEffect("linger","l","","(8/8) $")
 call BindTidalEffect("ply","p","","(1) $")
 call BindTidalEffect("chop","c","","(1) $")
 call BindTidalEffect("iter","i","","(1) $")
 call BindTidalEffect("degradeBy","d","","(4/8) $")
 call BindTidalEffect("shiftBy","b","","(1/8) $")
+
 
 
 """""""" Manuvering
