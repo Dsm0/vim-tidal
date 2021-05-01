@@ -198,15 +198,10 @@ call BindTidalEffect("shiftBy","b","","(1/8) $")
 
 """""""" Manuvering
 
-let searchstring="[\\$\\|\\#\\|&\\||+]"
-let searchstring2="[\\$\\|\\#]"
+let searchstring="[\\$\\|\\#\\|&\\|\\\|+]"
 
-
-execute "map <silent> H ?".searchstring2."<CR>"
-execute "map <silent> L /".searchstring2."<CR>"
-
-" vmap <silent> H ?[\\$\|\\#]<CR>
-" vmap <silent> L /[\\$\|\\#]<CR>
+execute "map <silent> H ?".searchstring."<CR>"
+execute "map <silent> L /".searchstring."<CR>"
 
 let tidal_no_mappings = 1
 
