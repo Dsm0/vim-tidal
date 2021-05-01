@@ -190,14 +190,15 @@ call BindTidalEffect("linger","l","","(8/8) $")
 call BindTidalEffect("ply","p","","(1/1) $")
 call BindTidalEffect("iter","i","","(1/1) $")
 call BindTidalEffect("degradeBy","d","","(4/8) $")
+call BindTidalEffect("shiftBy","b","","(1/8) $")
 
 
 """""""" Manuvering
 
 let searchstring="[\\$\|\\#\|&\||+]"
 
-nmap <silent> H b:call search(searchstring,'eb')<CR>l
-nmap <silent> L :call search(searchstring,'e')<CR>l
+nmap <silent> H b:call search(searchstring,'eb')<CR>
+nmap <silent> L :call search(searchstring,'e')<CR>
 
 let tidal_no_mappings = 1
 
