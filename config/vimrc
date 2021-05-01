@@ -205,19 +205,26 @@ execute "map <silent> L /".searchstring."<CR>"
 
 let tidal_no_mappings = 1
 
+map <c-u> u 
+imap <c-r> <esc><c-r>i
+
 xmap <c-l> <Plug>TidalParagraphSend
 nmap <c-l> <Plug>TidalParagraphSend
+imap <c-l> <esc><Plug>TidalParagraphSendi
 
 xmap <c-k> <Plug>TidalLineSend
 nmap <c-k> <Plug>TidalLineSend
+imap <c-k> <esc><Plug>TidalLineSendi
 
 
 "for when you want to send text that isn't just a line or a paragraph
 xmap <c-j> <Plug>TidalMotionSend
 nmap <c-j> <Plug>TidalMotionSend
+imap <c-j> <esc><Plug>TidalMotionSend i
 
 xmap <m-h> :TidalHush <Return>
 nmap <m-h> :TidalHush <Return>
+imap <m-h> <esc>:TidalHush <Return>i
 
 let g:tidal_preserve_curpos = 1
 
