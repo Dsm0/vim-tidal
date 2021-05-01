@@ -113,11 +113,13 @@ function BindTidalEffect(effect, binding, prefix, ...)
 endfunction
 
 
-function BindTidalObject(object, binding, prefix, ...)
-  let l:effectString= a:prefix." ".a:effect." ".value." <esc>F(l".postCommand
-  let l:effectStringParen="(".a:effect." ".value." <esc>F(l".postCommand
-  exec "nmap <space>h".a:binding." a".effectString
-  exec "nmap <space><space>h".a:binding." a".effectStringParen
+function BindTidalObject(object, binding, ...)
+  let l:value= a:0>=1 ? a:1 : "(8/8)"
+  let l:effectString=" ".a:object." ".value." <esc>2F(lr"
+  exec "nmap <space>o".a:binding." a".effectString
+  exec "nmap <space>or".a:binding." a range (1/8) (1) $".effectString
+  exec "nmap <space><space>o".a:binding." a (".effectString
+  exec "nmap <space><space>or".a:binding." a ( range (1/8) (1) $".effectString
 endfunction
 
 
@@ -182,6 +184,14 @@ call BindTidalEffect("tremolo","lt","#")
 
 
 """ objects
+call BindTidalObject("sine","s","","")
+call BindTidalObject("tri","t","","")
+call BindTidalObject("saw","w","","")
+call BindTidalObject("rand","a","","")
+call BindTidalObject("irand 8","i","","")
+
+
+
 
 """" Pattern functions
 
@@ -190,8 +200,9 @@ call BindTidalEffect("fast","f","","(1) $")
 call BindTidalEffect("slow","s","","(1) $")
 
 call BindTidalEffect("linger","l","","(8/8) $")
-call BindTidalEffect("ply","p","","(1/1) $")
-call BindTidalEffect("iter","i","","(1/1) $")
+call BindTidalEffect("ply","p","","(1) $")
+call BindTidalEffect("chop","c","","(1) $")
+call BindTidalEffect("iter","i","","(1) $")
 call BindTidalEffect("degradeBy","d","","(4/8) $")
 call BindTidalEffect("shiftBy","b","","(1/8) $")
 
