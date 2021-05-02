@@ -219,27 +219,24 @@ execute 'nmap <space>s aslice (8) "0 1 2 3 4 5 6 7" $ '
 
 function InsRangeFunc(i)
 	let rnge = system("echo -n \\[{0..".a:i."}\\]")
-	call setline(line('.'), getline('.') . ' ' . rnge)
+    call setreg('r',rnge)
 endfunction
 
 function InsRangeStrFunc(i)
 	let rnge = system("echo -n \\[{0..".a:i."}\\]")
-	call setline(line('.'), getline('.') . '"' . rnge . '"')
+    call setreg('r','"'.rnge.'"')
 endfunction
 
 """ custom range (best used with slice I suppose
-command! -nargs=1 InsRange call InsRangeFunc(<args>)
-command! -nargs=1 InsRangeStr call InsRangeStrFunc(<args>)
+command -nargs=1 InsRange call InsRangeFunc(<args>) | :normal! "rp
+command -nargs=1 InsRangeStr call InsRangeStrFunc(<args>) | :normal! "rp
+
 nmap <space>R :InsRange
 nmap <space><space>R :InsRangeStr
 
 
 
-""" TEST
-nnoremap <F8> :call GetDate(8)<CR>
-function! GetDate(i)
-  " Append space + result to current line without moving cursor.
-endfunction
+
 
 """""""" Manuvering
 
