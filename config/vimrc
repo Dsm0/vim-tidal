@@ -250,9 +250,18 @@ xmap <c-l> <Plug>TidalParagraphSend
 nmap <c-l> <Plug>TidalParagraphSend
 imap <c-l> <esc><Plug>TidalParagraphSendi
 
+xmap <c-m-l> <CMD>TidalHush<CR><Plug>TidalParagraphSend
+nmap <c-m-l> <CMD>TidalHush<CR><Plug>TidalParagraphSend
+imap <c-m-l> <esc>:TidalHush<CR><Plug>TidalParagraphSendi
+
 xmap <c-k> <Plug>TidalLineSend
 nmap <c-k> <Plug>TidalLineSend
 imap <c-k> <esc><Plug>TidalLineSendi
+
+
+xmap <c-m-k> <CMD>TidalHush<CR><Plug>TidalLineSend
+nmap <c-m-k> <CMD>TidalHush<CR><Plug>TidalLineSend
+imap <c-m-k> <esc>:TidalHush<CR><Plug>TidalLineSend
 
 
 "for when you want to send text that isn't just a line or a paragraph
