@@ -43,13 +43,13 @@ exe join(["source ",expand($VIMTIDALROOT),"/config/plug.vim"],"")
 call plug#begin(expand($PACKAGEDIR))
     Plug 'tidalcycles/vim-tidal'
     Plug 'jiangmiao/auto-pairs'
-    Plug 'supercollider/scvim'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
     Plug 'preservim/nerdtree'
 call plug#end()
 
 autocmd FileType tidal setlocal commentstring=--\ %s
+autocmd BufRead,BufNewFile *.tidal setfiletype tidal
 map <C-_> <Plug>Commentary
 
 tnoremap <Esc> <C-\><C-n>
