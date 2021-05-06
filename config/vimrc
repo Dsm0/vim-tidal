@@ -275,14 +275,7 @@ imap <m-h> <esc>:TidalHush <Return>i
 
 let g:tidal_preserve_curpos = 1
 
-"" for alt+ any number key, (ie. alt+1, alt+2, etc...)
-"" it will evaluate the first d1, d2, etc... it can find that is below your cursor
-let i = 1
-while i <= 9
-  execute 'nnoremap <m-'.i.'> :TidalPlay'.i.'<cr>'
-  execute 'nmap <space>'.i.' :TidalJumpPlay'.i.'<cr>'
-  let i += 1
-endwhile
+
 
 function! s:TidalJumpPlay(stream)
   silent execute "normal! `".a:stream
@@ -293,31 +286,55 @@ endfunction
 
 command! -nargs=1 TidalJumpPlay call s:TidalJumpPlay(<args>)
 
-
-function! s:TidalPlayBackwards(stream)
-  let res = search('d' . stream,"b")
+function! s:TidalPlayNoVis_(stream)
+  let res = search('d' . a:stream)
   let l:cursor_pos = getpos(".")
   if res > 0
     silent execute "normal! vip:TidalSend\<cr>"
-    silent execute "normal! vip"
-    call s:TidalFlashVisualSelection()
   else
     echo "d" . a:stream . " was not found"
   endif
   call setpos('.', cursor_pos)
 endfunction
 
-command! -nargs=1 TidalPlayBackwards call s:TidalPlayBackwards(<args>)
+command! -nargs=1 TidalPlayNoVis call s:TidalPlayNoVis_(<args>)
 
-execute 'nnoremap <m-!> :TidalPlayBackwards1 <cr>'
-execute 'nnoremap <m-@> :TidalPlayBackwards2 <cr>'
-execute 'nnoremap <m-#> :TidalPlayBackwards3 <cr>'
-execute 'nnoremap <m-$> :TidalPlayBackwards4 <cr>'
-execute 'nnoremap <m-%> :TidalPlayBackwards5 <cr>'
-execute 'nnoremap <m-^> :TidalPlayBackwards6 <cr>'
-execute 'nnoremap <m-&> :TidalPlayBackwards7 <cr>'
-execute 'nnoremap <m-*> :TidalPlayBackwards8 <cr>'
-execute 'nnoremap <m-(> :TidalPlayBackwards9 <cr>'
+function! s:TidalPlayBackwardsNoVis_(stream)
+  let res = search('d' . a:stream,"b")
+  let l:cursor_pos = getpos(".")
+  if res > 0
+    silent execute "normal! vip:TidalSend\<cr>"
+  else
+    echo "d" . a:stream . " was not found"
+  endif
+  call setpos('.', cursor_pos)
+endfunction
+
+command! -nargs=1 TidalPlayBackwardsNoVis call s:TidalPlayBackwardsNoVis_(<args>)
+
+
+
+
+
+
+"" for alt+ any number key, (ie. alt+1, alt+2, etc...)
+"" it will evaluate the first d1, d2, etc... it can find that is below your cursor
+let i = 1
+while i <= 9
+  execute 'nnoremap <m-'.i.'> :TidalPlayNoVis'.i.'<cr>'
+  execute 'nmap <space>'.i.' :TidalJumpPlay'.i.'<cr>'
+  let i += 1
+endwhile
+
+execute 'nnoremap <m-!> :TidalPlayBackwardsNoVis1 <cr>'
+execute 'nnoremap <m-@> :TidalPlayBackwardsNoVis2 <cr>'
+execute 'nnoremap <m-#> :TidalPlayBackwardsNoVis3 <cr>'
+execute 'nnoremap <m-$> :TidalPlayBackwardsNoVis4 <cr>'
+execute 'nnoremap <m-%> :TidalPlayBackwardsNoVis5 <cr>'
+execute 'nnoremap <m-^> :TidalPlayBackwardsNoVis6 <cr>'
+execute 'nnoremap <m-&> :TidalPlayBackwardsNoVis7 <cr>'
+execute 'nnoremap <m-*> :TidalPlayBackwardsNoVis8 <cr>'
+execute 'nnoremap <m-(> :TidalPlayBackwardsNoVis9 <cr>'
 
 "" resets the cycle counter
 execute 'nnoremap <m-r> :TidalSend1 resetCycles <cr>'
