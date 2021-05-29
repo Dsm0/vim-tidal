@@ -4,3 +4,7 @@
 *.swn
 *.swm
 *.swo
+osc2ws
+pack/nerdtree
+pack/vim-tidal
+.gitignore
