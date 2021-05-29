@@ -108,7 +108,9 @@ let (&) = (|*|)
     roll'' p = stutWith 2 (shift' 100000 $ choose [(0.0625*3), (0.125*3)]) id $ p
     rollAny = rollany
     preFx =    [("short", (# sus 0.1)),
-                ("linger", linger 0.5),
+                ("linger2", linger (1/2)),
+                ("linger4", linger (1/4)),
+                ("linger8", linger (1/8)),
                 ("sply", ply "2" . slow 2),
                 ("ply", ply "2"),
                 ("lofi",(# lofi)),
@@ -140,9 +142,13 @@ let (&) = (|*|)
     -- frange x y = s((# hpf x) . (# lpf y))
     chordList =["6by9","'7f10","'7f5","'7f9","'7s5","'7s5f9","'7sus2","'7sus4","'9s5","'9sus4","'aug","'dim","'dim7","'dom7","'eleven","'elevenSharp","'five","'m11","'m11s","'m11sharp","'m13m6","'m6by9","'m7f5","'m7f9","'m7flat5","'m7flat9","'m7s5","'m7s9","'m7sharp5","'m7sharp5flat9","'m7sharp9","'m9","'m9s5","'m9sharp5","'maj","'maj11","'maj7", "maj9","'major","'major7","'min","'min7","'minor","'minor7","'msharp5","'nine","'nineSharp5","'nineSus4","'ninesus4","'one","'plus","'sevenFlat10","'sevenFlat5","'sevenFlat9","'sevenSharp5","'sevenSharp5flat9","'sevenSus2","'sevenSus4","'sharp5","'six","'sixby9","'sus2","'sus4","'thirteen"]
     fx cond pat = when cond (# gain 1) $ pat # gain 0
+    tst x = once $ (# cut 1) . (# sus 3) $ x
+    loopStriate n k p = slow n ((linger (fromRational <$> (1/n)) 
+  			\. shiftBy (fromRational <$> (k/n)) 
+  		  	\. striate (round <$> n)) p) 
+   		  |* speed (fromRational <$> (1/n)) # unit (pure "c") 
+    loopStriate' n k k' p = slow n ((linger (fromRational <$> (1/n)) 
+    			. shiftBy (fromRational <$> (k/n)) 
+    		  	. striate (round <$> n)) $ (k' p))
+     		  |* speed (fromRational <$> (1/n)) # unit (pure "c") 
 :}
-
-
-
-
-

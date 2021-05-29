@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /M/tidalcycles/Tidal
-/usr/bin/stack exec -- ghci -ghci-script ~/.config/tidal/init/BootTidal.hs
+/usr/local/bin/stack exec -- ghci -ghci-script ~/.config/tidal/init/BootTidal.hs
