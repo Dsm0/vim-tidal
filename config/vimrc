@@ -54,6 +54,9 @@ map <C-_> <Plug>Commentary
 
 tnoremap <Esc> <C-\><C-n>
 
+nmap Y "+y
+nmap P "+p
+
 let tidalRoot = expand($VIMTIDALROOT)
 
 exec "set dictionary+=" . tidalRoot."/dict/samples_dict"
