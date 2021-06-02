@@ -372,9 +372,9 @@ let g:effects_chain = ""
 
 function! s:TidalEffect_(effect, ...)
   if a:0 >= 1
-    let g:effects_chain = " " . a:effect . "__ . "
+    let g:effects_chain = " eff_" . a:effect . " . "
   else
-    let g:effects_chain = g:effects_chain .  " " . a:effect . "__ . "
+    let g:effects_chain = g:effects_chain .  " eff_" . a:effect . " . "
   endif
   echo g:effects_chain
   execute ':TidalSend1 all $ ' . g:effects_chain . 'id'
@@ -400,6 +400,14 @@ command! -nargs=1 TidalEffectClear call s:TidalEffect_(<args>,1)
 
 let i = char2nr("a")
 while i <= char2nr("z")
+  execute 'nmap <space>e'.nr2char(i).' :TidalEffect("'.nr2char(i).'") <CR>'
+  execute 'nmap <space><space>e'.nr2char(i).' :TidalEffectClear("'.nr2char(i).'") <CR>'
+  let i += 1
+endwhile
+
+"" also map uppercase letters
+let i = char2nr("A")
+while i <= char2nr("Z")
   execute 'nmap <space>e'.nr2char(i).' :TidalEffect("'.nr2char(i).'") <CR>'
   execute 'nmap <space><space>e'.nr2char(i).' :TidalEffectClear("'.nr2char(i).'") <CR>'
   let i += 1
