@@ -360,3 +360,41 @@ execute 'nnoremap <C-m-S> :TidalSend1 p "midictl" $ midicmd "start" # s "midi" <
 """" applying effects globally
 """" applying effects globally
 
+
+
+
+"" when called, 
+"" you can either stack an effect on top of others
+"" or clear the stack and add your effect
+
+
+let g:effects_chain = ""
+
+function! s:TidalEffect_(effect, ...)
+  if a:0 >= 1
+    let g:effects_chain = " __" . a:effect . " . "
+  else
+    let g:effects_chain = g:effects_chain .  " __" . a:effect . " . "
+  endif
+  echo g:effects_chain
+  execute ':TidalSend1 all $ ' . g:effects_chain . 'id'
+endfunction
+
+function! s:RestoreTidalEffects_()
+  execute ':TidalSend1 all $ ' . g:effects_chain . 'id'
+endfunction
+
+command! RestoreTidalEffects call s:RestoreTidalEffects_()
+
+
+command! -nargs=1 TidalEffect call s:TidalEffect_(<args>)
+command! -nargs=1 TidalEffectClear call s:TidalEffect_(<args>,1)
+
+execute 'nmap <space>E<v:operator> :TidalEffect("l") <CR>'
+execute 'nmap <space><space>El :TidalEffectClear("l") <CR>'
+
+"" re-execute effects_chain without adding any new effects
+execute 'nmap <space>EE :RestoreTidalEffects<cr>'
+
+"" reset effects
+execute 'nmap <space>E<space> :let g:effects_chain = "" <CR>'
