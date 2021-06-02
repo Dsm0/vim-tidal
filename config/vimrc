@@ -135,11 +135,11 @@ call BindTidalEffect("pan","P","#")
 call BindTidalEffect("accelerate","A","#")
 
 "" envelope related
-call BindTidalEffect("att","ea","#")
-call BindTidalEffect("hold","eh","#")
-call BindTidalEffect("rel","er","#")
+call BindTidalEffect("att","Ea","#")
+call BindTidalEffect("hold","Eh","#")
+call BindTidalEffect("rel","Er","#")
 """ considering this chief to the contour of the sound
-call BindTidalEffect("sus","es","#")
+call BindTidalEffect("sus","Es","#")
 
 "" filters
 call BindTidalEffect("lpf","fl","#","(2000*(8/8))")
@@ -372,9 +372,9 @@ let g:effects_chain = ""
 
 function! s:TidalEffect_(effect, ...)
   if a:0 >= 1
-    let g:effects_chain = " __" . a:effect . " . "
+    let g:effects_chain = " " . a:effect . "__ . "
   else
-    let g:effects_chain = g:effects_chain .  " __" . a:effect . " . "
+    let g:effects_chain = g:effects_chain .  " " . a:effect . "__ . "
   endif
   echo g:effects_chain
   execute ':TidalSend1 all $ ' . g:effects_chain . 'id'
@@ -383,18 +383,30 @@ endfunction
 function! s:RestoreTidalEffects_()
   execute ':TidalSend1 all $ ' . g:effects_chain . 'id'
 endfunction
-
 command! RestoreTidalEffects call s:RestoreTidalEffects_()
+
+function! s:ResetTidalEffects_()
+  execute 'let g:effects_chain = ""'
+  execute ':TidalSend1 all $ id'
+endfunction
+
+command! ResetTidalEffects call s:ResetTidalEffects_()
 
 
 command! -nargs=1 TidalEffect call s:TidalEffect_(<args>)
 command! -nargs=1 TidalEffectClear call s:TidalEffect_(<args>,1)
 
-execute 'nmap <space>E<v:operator> :TidalEffect("l") <CR>'
-execute 'nmap <space><space>El :TidalEffectClear("l") <CR>'
+
+
+let i = char2nr("a")
+while i <= char2nr("z")
+  execute 'nmap <space>e'.nr2char(i).' :TidalEffect("'.nr2char(i).'") <CR>'
+  execute 'nmap <space><space>e'.nr2char(i).' :TidalEffectClear("'.nr2char(i).'") <CR>'
+  let i += 1
+endwhile
 
 "" re-execute effects_chain without adding any new effects
-execute 'nmap <space>EE :RestoreTidalEffects<cr>'
+execute 'nmap <space>ee :RestoreTidalEffects<cr>'
 
 "" reset effects
-execute 'nmap <space>E<space> :let g:effects_chain = "" <CR>'
+execute 'nmap <space>e<space> :ResetTidalEffects <CR>'
