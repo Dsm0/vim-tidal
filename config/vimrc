@@ -339,6 +339,11 @@ execute 'nnoremap <m-&> :TidalPlayBackwardsNoVis7 <cr>'
 execute 'nnoremap <m-*> :TidalPlayBackwardsNoVis8 <cr>'
 execute 'nnoremap <m-(> :TidalPlayBackwardsNoVis9 <cr>'
 
+
+"" binding for jumping by "do" instead of "d1, d2, ..."
+execute 'nmap <m-d> :TidalPlayNoVis("o")<cr>'
+execute 'nmap <m-D> :TidalPlayBackwardsNoVis("o")<cr>'
+
 "" resets the cycle counter
 execute 'nnoremap <m-r> :TidalSend1 resetCycles <cr>'
 
