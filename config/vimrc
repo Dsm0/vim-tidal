@@ -418,3 +418,16 @@ execute 'nmap <space>ee :RestoreTidalEffects<cr>'
 
 "" reset effects
 execute 'nmap <space>e<space> :ResetTidalEffects <CR>'
+
+
+
+
+
+
+"""" pulu-clock
+
+execute 'nnoremap <m-s> :TidalSend1 startClock <cr>'
+execute 'nnoremap <m-S> :TidalSend1 stopClock <cr>'
+
+"""" hush without stopping the clock
+execute 'nmap <m-H> :TidalSend1 do {hush ; startClock} <cr>'
