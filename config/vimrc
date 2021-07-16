@@ -344,8 +344,6 @@ execute 'nnoremap <m-(> :TidalPlayBackwardsNoVis9 <cr>'
 execute 'nmap <m-d> :TidalPlayNoVis("o")<cr>'
 execute 'nmap <m-D> :TidalPlayBackwardsNoVis("o")<cr>'
 
-"" resets the cycle counter
-execute 'nnoremap <m-r> :TidalSend1 resetCycles <cr>'
 
 "" resets any effects applied globally
 execute 'nnoremap <m-)> :TidalSend1 all $ id <cr>'
@@ -427,7 +425,11 @@ execute 'nmap <space>e<space> :ResetTidalEffects <CR>'
 """" pulu-clock
 
 execute 'nnoremap <m-s> :TidalSend1 startClock <cr>'
-execute 'nnoremap <m-S> :TidalSend1 stopClock <cr>'
 
-"""" hush without stopping the clock
-execute 'nmap <m-H> :TidalSend1 do {hush ; startClock} <cr>'
+execute 'nnoremap <m-S> :TidalSend1 startClock <cr>'
+
+" """" hush + stop the clock
+" execute 'nmap <m-H> :TidalSend1 streamHush tidal <cr>'
+
+"" resets the cycle counter and clock
+execute 'nnoremap <m-r> :TidalSend1 do {resetCycles; streamOnce tidal $ "tick" } <cr>'
